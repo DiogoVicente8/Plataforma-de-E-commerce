@@ -16,17 +16,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        User::firstOrCreate(
+            ['email' => 'admin@loja.test'],
+            ['name' => 'Admin', 'password' => 'password', 'role' => UserRole::Admin],
+        );
 
-        User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@loja.test',
-            'role' => UserRole::Admin,
-        ]);
+        User::firstOrCreate(
+            ['email' => 'cliente@loja.test'],
+            ['name' => 'Cliente', 'password' => 'password', 'role' => UserRole::Customer],
+        );
 
-        User::factory()->create([
-            'name' => 'Cliente',
-            'email' => 'cliente@loja.test',
-        ]);
+        $this->call(OrderSeeder::class);
     }
 }
