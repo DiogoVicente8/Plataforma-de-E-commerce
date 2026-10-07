@@ -16,16 +16,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::firstOrCreate(
-            ['email' => 'admin@loja.test'],
-            ['name' => 'Admin', 'password' => 'password', 'role' => UserRole::Admin],
-        );
+        $this->seedUser('Admin', 'admin@loja.test', UserRole::Admin);
+        $this->seedUser('Cliente', 'cliente@loja.test', UserRole::Customer);
 
-        User::firstOrCreate(
-            ['email' => 'cliente@loja.test'],
-            ['name' => 'Cliente', 'password' => 'password', 'role' => UserRole::Customer],
-        );
-
+        // TODO: Call the catalogue category and product seeders before OrderSeeder.
         $this->call(OrderSeeder::class);
+    }
+
+    private function seedUser(string $name, string $email, UserRole $role): User
+    {
+        return User::unguarded(fn (): User => User::updateOrCreate(
+            ['email' => $email],
+            ['name' => $name, 'password' => 'password', 'role' => $role],
+        ));
     }
 }

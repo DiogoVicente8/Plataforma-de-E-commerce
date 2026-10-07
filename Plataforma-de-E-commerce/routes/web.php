@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -22,6 +23,7 @@ Route::middleware(['auth', 'verified', 'admin'])
     ->name('admin.')
     ->group(function () {
         Route::view('/', 'admin.dashboard')->name('dashboard');
+        Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update', 'destroy']);
     });
 
 require __DIR__.'/auth.php';

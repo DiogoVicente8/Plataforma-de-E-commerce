@@ -4,15 +4,21 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\User;
 
-it('seeds example orders with line items and calculated totals idempotently', function () {
+it('seeds example orders and calculated totals idempotently', function () {
     $this->seed();
     $this->seed();
 
     expect(Order::count())->toBe(3)
         ->and(OrderItem::count())->toBe(6)
-        ->and(User::where('email', 'cliente@loja.test')->exists())->toBeTrue();
+        ->and(Order::with('items')->get()->every(fn (Order $order): bool => $order->total_cents > 0
+            && $order->total_cents === $order->items->sum(fn (OrderItem $item): int => $item->subtotalCents())))->toBeTrue()
+        ->and(Order::all()->map(fn (Order $order): string => $order->status->value)->all())
+        ->toEqualCanonicalizing(['pending', 'paid', 'shipped']);
+});
 
-    expect(Order::where('status', 'pending')->firstOrFail()->total_cents)->toBe(5297)
-        ->and(Order::where('status', 'paid')->firstOrFail()->total_cents)->toBe(3497)
-        ->and(Order::where('status', 'shipped')->firstOrFail()->total_cents)->toBe(3797);
+it('seeds an administrator and a customer with the correct roles', function () {
+    $this->seed();
+
+    expect(User::where('email', 'admin@loja.test')->firstOrFail()->isAdmin())->toBeTrue()
+        ->and(User::where('email', 'cliente@loja.test')->firstOrFail()->isAdmin())->toBeFalse();
 });

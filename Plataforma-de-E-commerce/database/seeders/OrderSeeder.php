@@ -2,10 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Enums\OrderStatus;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 
 class OrderSeeder extends Seeder
@@ -14,68 +16,27 @@ class OrderSeeder extends Seeder
     {
         $customer = User::where('email', 'cliente@loja.test')->firstOrFail();
 
-        $category = Category::firstOrCreate(
-            ['slug' => 'demo'],
-            [
-                'name' => 'Demonstração',
-                'description' => 'Categoria criada para os dados de demonstração.',
-            ],
-        );
+        $products = Product::query()->where('is_active', true)->orderBy('id')->take(3)->get();
 
-        $products = collect([
-            [
-                'slug' => 't-shirt-demo',
-                'name' => 'T-shirt de demonstração',
-                'price_cents' => 1999,
-            ],
-            [
-                'slug' => 'caneca-demo',
-                'name' => 'Caneca de demonstração',
-                'price_cents' => 1299,
-            ],
-            [
-                'slug' => 'saco-demo',
-                'name' => 'Saco de demonstração',
-                'price_cents' => 899,
-            ],
-        ])->mapWithKeys(function (array $attributes) use ($category) {
-            $product = Product::firstOrCreate(
-                ['slug' => $attributes['slug']],
-                [
-                    'category_id' => $category->id,
-                    'name' => $attributes['name'],
-                    'description' => 'Produto criado para as encomendas de demonstração.',
-                    'price_cents' => $attributes['price_cents'],
-                    'is_active' => true,
-                ],
-            );
+        if ($products->count() < 3) {
+            $products = $this->createDemoProducts();
+        }
 
-            return [$attributes['slug'] => $product];
-        });
+        $samples = [OrderStatus::Pending, OrderStatus::Paid, OrderStatus::Shipped];
 
-        $samples = [
-            'pending' => [
-                ['product' => 't-shirt-demo', 'quantity' => 2],
-                ['product' => 'caneca-demo', 'quantity' => 1],
-            ],
-            'paid' => [
-                ['product' => 'saco-demo', 'quantity' => 1],
-                ['product' => 'caneca-demo', 'quantity' => 2],
-            ],
-            'shipped' => [
-                ['product' => 't-shirt-demo', 'quantity' => 1],
-                ['product' => 'saco-demo', 'quantity' => 2],
-            ],
-        ];
-
-        foreach ($samples as $status => $lines) {
-            $order = Order::firstOrCreate(
-                ['user_id' => $customer->id, 'status' => $status],
+        foreach ($samples as $index => $status) {
+            $order = Order::updateOrCreate(
+                ['user_id' => $customer->id, 'status' => $status->value],
                 ['total_cents' => 0],
             );
 
+            $lines = [
+                ['product' => $products[$index], 'quantity' => $index + 1],
+                ['product' => $products[($index + 1) % 3], 'quantity' => 1],
+            ];
+
             foreach ($lines as $line) {
-                $product = $products->get($line['product']);
+                $product = $line['product'];
 
                 $order->items()->updateOrCreate(
                     ['product_id' => $product->id],
@@ -87,11 +48,39 @@ class OrderSeeder extends Seeder
                 );
             }
 
-            $totalCents = $order->items()
-                ->get()
-                ->sum(fn ($item) => $item->quantity * $item->unit_price_cents);
-
-            $order->update(['total_cents' => $totalCents]);
+            $order->update([
+                'total_cents' => $order->items->sum(fn ($item): int => $item->subtotalCents()),
+            ]);
         }
+    }
+
+    /** @return Collection<int, Product> */
+    private function createDemoProducts(): Collection
+    {
+        $category = Category::firstOrCreate(
+            ['slug' => 'demo'],
+            ['name' => 'Demonstração', 'description' => 'Categoria criada para os dados de demonstração.'],
+        );
+
+        $definitions = [
+            ['slug' => 't-shirt-basica-demo', 'name' => 'T-shirt básica', 'price_cents' => 1999],
+            ['slug' => 'camisola-la-demo', 'name' => 'Camisola de lã', 'price_cents' => 3990],
+            ['slug' => 'calcas-ganga-demo', 'name' => 'Calças de ganga', 'price_cents' => 4990],
+        ];
+
+        foreach ($definitions as $attributes) {
+            Product::firstOrCreate(
+                ['slug' => $attributes['slug']],
+                [
+                    'category_id' => $category->id,
+                    'name' => $attributes['name'],
+                    'description' => 'Produto criado para as encomendas de demonstração.',
+                    'price_cents' => $attributes['price_cents'],
+                    'is_active' => true,
+                ],
+            );
+        }
+
+        return Product::query()->whereIn('slug', array_column($definitions, 'slug'))->orderBy('id')->get();
     }
 }

@@ -10,6 +10,9 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     {{ __('Bem-vindo, :name.', ['name' => auth()->user()->name]) }}
+                    <div class="mt-4">
+                        <a class="text-indigo-600 underline hover:text-indigo-900" href="{{ route('admin.orders.index') }}">{{ __('Gerir encomendas') }}</a>
+                    </div>
                 </div>
             </div>
         </div>

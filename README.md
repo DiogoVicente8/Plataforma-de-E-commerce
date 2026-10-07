@@ -56,4 +56,74 @@ resources/views/         Vistas Blade
 routes/                  Rotas (web.php, auth.php)
 tests/                   Testes Pest
 ```
- 
+## Modelo de dados
+
+erDiagram
+    users ||--o{ orders : "faz"
+    users ||--o{ favorites : "marca"
+    products ||--o{ favorites : "é marcado em"
+    categories ||--o{ products : "agrupa"
+    products ||--o{ product_variants : "tem"
+    products ||--o{ product_images : "tem"
+    orders ||--|{ order_items : "contém"
+    products |o--o{ order_items : "origina"
+
+    users {
+        bigint id PK
+        string name
+        string email UK
+        timestamp email_verified_at
+        string password
+        string role
+        string remember_token
+    }
+    categories {
+        bigint id PK
+        string name
+        string slug UK
+        text description
+    }
+    products {
+        bigint id PK
+        bigint category_id FK
+        string name
+        string slug UK
+        text description
+        uint price_cents
+        boolean is_active
+    }
+    product_variants {
+        bigint id PK
+        bigint product_id FK
+        string size
+        string color
+        string sku UK
+        uint stock
+        uint price_cents
+    }
+    product_images {
+        bigint id PK
+        bigint product_id FK
+        string path
+        string alt_text
+        usmallint position
+    }
+    orders {
+        bigint id PK
+        bigint user_id FK
+        string status
+        ubigint total_cents
+    }
+    order_items {
+        bigint id PK
+        bigint order_id FK
+        bigint product_id FK
+        string product_name
+        uint quantity
+        uint unit_price_cents
+    }
+    favorites {
+        bigint id PK
+        bigint user_id FK
+        bigint product_id FK
+    }

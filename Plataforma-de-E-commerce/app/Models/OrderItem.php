@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Money;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -25,5 +26,20 @@ class OrderItem extends Model
             'quantity' => 'integer',
             'unit_price_cents' => 'integer',
         ];
+    }
+
+    public function subtotalCents(): int
+    {
+        return $this->quantity * $this->unit_price_cents;
+    }
+
+    public function formattedUnitPrice(): string
+    {
+        return Money::format($this->unit_price_cents);
+    }
+
+    public function formattedSubtotal(): string
+    {
+        return Money::format($this->subtotalCents());
     }
 }
