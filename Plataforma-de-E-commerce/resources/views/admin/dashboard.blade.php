@@ -12,6 +12,7 @@
                     {{ __('Bem-vindo, :name.', ['name' => auth()->user()->name]) }}
                     <div class="mt-4">
                         <a class="text-indigo-600 underline hover:text-indigo-900" href="{{ route('admin.orders.index') }}">{{ __('Gerir encomendas') }}</a>
+                        <a class="ml-4 text-indigo-600 underline hover:text-indigo-900" href="{{ route('admin.categories.index') }}">{{ __('Gerir categorias') }}</a>
                     </div>
                 </div>
             </div>
