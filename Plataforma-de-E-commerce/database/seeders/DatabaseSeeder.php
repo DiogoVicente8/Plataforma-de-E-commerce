@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->seedUser('Admin', 'admin@loja.test', UserRole::Admin);
         $this->seedUser('Cliente', 'cliente@loja.test', UserRole::Customer);
 
-        // TODO: Call the catalogue category and product seeders before OrderSeeder.
+        $this->call(CatalogSeeder::class);
         $this->call(OrderSeeder::class);
     }
 
