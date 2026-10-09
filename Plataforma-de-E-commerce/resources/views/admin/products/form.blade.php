@@ -70,6 +70,7 @@
 
             @if ($isEdit)
                 @include('admin.products.variants')
+                @include('admin.products.images')
             @endif
         </div>
     </div>

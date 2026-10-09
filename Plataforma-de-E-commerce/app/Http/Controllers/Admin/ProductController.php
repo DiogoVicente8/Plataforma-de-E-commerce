@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -54,6 +55,7 @@ class ProductController extends Controller
 
     public function destroy(Product $product): RedirectResponse
     {
+        Storage::disk('public')->delete($product->images->pluck('path')->all());
         $product->delete();
 
         return redirect()->route('admin.products.index')->with('success', __('Produto eliminado.'));

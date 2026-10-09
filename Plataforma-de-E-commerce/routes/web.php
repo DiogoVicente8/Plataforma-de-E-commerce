@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductVariantController as AdminProductVariantController;
+use App\Http\Controllers\Admin\ProductImageController as AdminProductImageController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -30,6 +31,7 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::resource('categories', AdminCategoryController::class)->except(['show']);
         Route::resource('products', AdminProductController::class)->except(['show']);
         Route::resource('products.variants', AdminProductVariantController::class)->only(['store', 'update', 'destroy'])->shallow();
+        Route::resource('products.images', AdminProductImageController::class)->only(['store', 'destroy'])->shallow();
     });
 
 require __DIR__.'/auth.php';
