@@ -25,7 +25,8 @@ Aplicação web do lado do servidor para uma loja de roupa, com dois perfis de u
 | Painel de administração (base) | Feito |
 | Modelo de dados: catálogo, encomendas e favoritos (migrações, models e seeders) | Feito |
 | Gestão de encomendas no admin (listar, ver, alterar estado e eliminar) | Feito |
-| CRUD de produtos e categorias no admin | Em desenvolvimento |
+| CRUD de categorias no admin | Feito |
+| CRUD de produtos no admin | Em desenvolvimento |
 | Catálogo público, favoritos, carrinho e checkout | Planeado |
 | API REST e consumo de serviço externo | Planeado |
 | Testes automatizados e publicação | Planeado |
