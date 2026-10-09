@@ -8,7 +8,11 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            @if (session('success'))
+                <div class="rounded-md bg-green-50 p-4 text-green-800" role="status">{{ session('success') }}</div>
+            @endif
+
             <div class="bg-white p-6 shadow-sm sm:rounded-lg">
                 <form method="POST" action="{{ $isEdit ? route('admin.products.update', $product) : route('admin.products.store') }}" class="space-y-6">
                     @csrf
@@ -59,10 +63,14 @@
 
                     <div class="flex items-center gap-4">
                         <x-primary-button>{{ $isEdit ? __('Guardar alterações') : __('Criar produto') }}</x-primary-button>
-                        <a href="{{ route('admin.products.index') }}" class="text-sm text-gray-600 underline hover:text-gray-900">{{ __('Cancelar') }}</a>
+                        <a href="{{ route('admin.products.index') }}" class="text-sm text-gray-600 underline hover:text-gray-900">{{ __('Voltar à lista') }}</a>
                     </div>
                 </form>
             </div>
+
+            @if ($isEdit)
+                @include('admin.products.variants')
+            @endif
         </div>
     </div>
 </x-app-layout>
