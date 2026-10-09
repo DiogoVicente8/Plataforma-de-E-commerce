@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -26,6 +27,7 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::view('/', 'admin.dashboard')->name('dashboard');
         Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update', 'destroy']);
         Route::resource('categories', AdminCategoryController::class)->except(['show']);
+        Route::resource('products', AdminProductController::class)->except(['show']);
     });
 
 require __DIR__.'/auth.php';
