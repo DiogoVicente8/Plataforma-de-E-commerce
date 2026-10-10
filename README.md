@@ -26,7 +26,7 @@ Aplicação web do lado do servidor para uma loja de roupa, com dois perfis de u
 | Modelo de dados: catálogo, encomendas e favoritos (migrações, models e seeders) | Feito |
 | Gestão de encomendas no admin (listar, ver, alterar estado e eliminar) | Feito |
 | CRUD de categorias no admin | Feito |
-| CRUD de produtos no admin | Em desenvolvimento |
+| CRUD de produtos no admin | Feito |
 | Catálogo público, favoritos, carrinho e checkout | Planeado |
 | API REST e consumo de serviço externo | Planeado |
 | Testes automatizados e publicação | Planeado |
@@ -60,7 +60,45 @@ Criadas pelo `DatabaseSeeder`. A password de ambas é `password`.
 ```bash
 php artisan test
 ```
+## Instalação
 
+```bash
+# 1. Clonar o repositório
+git clone https://github.com/DiogoVicente8/Plataforma-de-E-commerce.git
+cd Plataforma-de-E-commerce/Plataforma-de-E-commerce
+
+# 2. Instalar as dependências
+composer install
+npm install
+
+# 3. Configurar o ambiente
+cp .env.example .env
+php artisan key:generate
+
+# 4. Criar a base de dados SQLite
+touch database/database.sqlite
+
+# 5. Criar as tabelas e os dados de teste
+php artisan migrate:fresh --seed
+
+# 6. Ligar a pasta de imagens (necessário para ver as fotografias dos produtos)
+php artisan storage:link
+
+# 7. Compilar os ficheiros de front-end
+npm run build
+```
+
+No Windows (PowerShell), o passo 4 é `New-Item database/database.sqlite -ItemType File`.
+
+> O projeto Laravel está na pasta `Plataforma-de-E-commerce/` dentro do repositório. Os comandos acima devem ser executados nessa pasta.
+
+## Executar
+
+```bash
+php artisan serve
+```
+
+A aplicação fica disponível em `http://127.0.0.1:8000`. Em desenvolvimento, para recompilar o front-end automaticamente, corre também `npm run dev` num segundo terminal.
 ## Estrutura do projeto
 
 ```
