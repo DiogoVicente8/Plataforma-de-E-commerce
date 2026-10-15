@@ -38,7 +38,7 @@
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4 text-right text-sm">
                                         <a class="text-indigo-600 hover:text-indigo-900" href="{{ route('admin.products.edit', $product) }}">{{ __('Editar') }}</a>
-                                        <form method="POST" action="{{ route('admin.products.destroy', $product) }}" class="ms-4 inline" onsubmit="return confirm('{{ __('Eliminar este produto?') }}')">
+                                        <form method="POST" action="{{ route('admin.products.destroy', $product) }}" class="ms-4 inline" onsubmit="return confirm(this.dataset.confirm)" data-confirm="{{ __('Eliminar este produto?') }}">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-600 hover:text-red-900">{{ __('Eliminar') }}</button>

@@ -49,6 +49,18 @@ class OrderController extends Controller
         return redirect()->route('admin.orders.show', $order)->with('success', __('Estado da encomenda atualizado.'));
     }
 
+    public function refund(Order $order): RedirectResponse
+    {
+        if (! in_array($order->status, [OrderStatus::Paid, OrderStatus::Shipped], true)) {
+            return redirect()->route('admin.orders.show', $order)
+                ->withErrors(['refund' => __('Só é possível reembolsar encomendas pagas ou enviadas.')]);
+        }
+
+        $order->update(['status' => OrderStatus::Refunded]);
+
+        return redirect()->route('admin.orders.show', $order)->with('success', __('Encomenda marcada como reembolsada.'));
+    }
+
     public function destroy(Order $order): RedirectResponse
     {
         $order->delete();

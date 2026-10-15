@@ -17,7 +17,6 @@ Aplicação web do lado do servidor para uma loja de roupa, com dois perfis de u
 - **Administrador**: gere o catálogo (produtos, categorias, variantes, stock e imagens) e as encomendas.
 
 ## Estado atual
-
 | Funcionalidade | Estado |
 |---|---|
 | Registo, login, recuperação de password e perfil (Laravel Breeze) | Feito |
@@ -28,8 +27,17 @@ Aplicação web do lado do servidor para uma loja de roupa, com dois perfis de u
 | CRUD de categorias no admin | Feito |
 | CRUD de produtos no admin | Feito |
 | Catálogo público, favoritos, carrinho e checkout | Planeado |
-| API REST e consumo de serviço externo | Planeado |
+| API REST | Feito |
+| Consumo de serviço externo | Planeado |
 | Testes automatizados e publicação | Planeado |
+
+## API
+
+A API REST versionada utiliza tokens Laravel Sanctum. Consulta a [documentação da API](docs/api.md) e a coleção Postman em `docs/postman_collection.json`.
+
+```bash
+curl -H "Authorization: Bearer SEU_TOKEN" http://127.0.0.1:8000/api/v1/products
+```
 
 ## Tecnologias
 

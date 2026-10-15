@@ -39,7 +39,7 @@
                                 @method('PATCH')
                                 <button type="submit" class="text-indigo-600 hover:text-indigo-900">{{ __('Guardar') }}</button>
                             </form>
-                            <form method="POST" action="{{ route('admin.variants.destroy', $variant) }}" class="ms-3 inline" onsubmit="return confirm('{{ __('Eliminar esta variante?') }}')">
+                            <form method="POST" action="{{ route('admin.variants.destroy', $variant) }}" class="ms-3 inline" onsubmit="return confirm(this.dataset.confirm)" data-confirm="{{ __('Eliminar esta variante?') }}">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-red-600 hover:text-red-900">{{ __('Eliminar') }}</button>

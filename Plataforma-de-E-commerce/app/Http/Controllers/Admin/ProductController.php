@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\DeleteProduct;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProductRequest;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -26,7 +26,7 @@ class ProductController extends Controller
     public function create(): View
     {
         return view('admin.products.form', [
-            'product' => new Product(),
+            'product' => new Product,
             'categories' => Category::orderBy('name')->get(),
         ]);
     }
@@ -53,10 +53,9 @@ class ProductController extends Controller
         return redirect()->route('admin.products.index')->with('success', __('Produto atualizado.'));
     }
 
-    public function destroy(Product $product): RedirectResponse
+    public function destroy(Product $product, DeleteProduct $deleteProduct): RedirectResponse
     {
-        Storage::disk('public')->delete($product->images->pluck('path')->all());
-        $product->delete();
+        $deleteProduct->execute($product);
 
         return redirect()->route('admin.products.index')->with('success', __('Produto eliminado.'));
     }

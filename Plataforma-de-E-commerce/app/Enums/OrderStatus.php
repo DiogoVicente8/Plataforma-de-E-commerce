@@ -9,6 +9,8 @@ enum OrderStatus: string
     case Shipped = 'shipped';
     case Cancelled = 'cancelled';
 
+    case Refunded = 'refunded';
+
     public function label(): string
     {
         return match ($this) {
@@ -16,6 +18,7 @@ enum OrderStatus: string
             self::Paid => 'Paga',
             self::Shipped => 'Enviada',
             self::Cancelled => 'Cancelada',
+            self::Refunded => 'Reembolsada',
         };
     }
 }

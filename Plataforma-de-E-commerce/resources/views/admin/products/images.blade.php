@@ -16,7 +16,7 @@
         @forelse ($product->images as $image)
             <div class="rounded-md border border-gray-200 p-2">
                 <img src="{{ asset('storage/'.$image->path) }}" alt="{{ $image->alt_text }}" class="aspect-square w-full rounded object-cover">
-                <form method="POST" action="{{ route('admin.images.destroy', $image) }}" class="mt-2 text-center" onsubmit="return confirm('{{ __('Eliminar esta imagem?') }}')">
+                <form method="POST" action="{{ route('admin.images.destroy', $image) }}" class="mt-2 text-center" onsubmit="return confirm(this.dataset.confirm)" data-confirm="{{ __('Eliminar esta imagem?') }}">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="text-sm text-red-600 hover:text-red-900">{{ __('Eliminar') }}</button>

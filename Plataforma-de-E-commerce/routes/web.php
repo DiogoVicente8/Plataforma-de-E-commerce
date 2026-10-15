@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
-use App\Http\Controllers\Admin\ProductVariantController as AdminProductVariantController;
 use App\Http\Controllers\Admin\ProductImageController as AdminProductImageController;
+use App\Http\Controllers\Admin\ProductVariantController as AdminProductVariantController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -28,6 +28,7 @@ Route::middleware(['auth', 'verified', 'admin'])
     ->group(function () {
         Route::view('/', 'admin.dashboard')->name('dashboard');
         Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update', 'destroy']);
+        Route::patch('orders/{order}/refund', [AdminOrderController::class, 'refund'])->name('orders.refund');
         Route::resource('categories', AdminCategoryController::class)->except(['show']);
         Route::resource('products', AdminProductController::class)->except(['show']);
         Route::resource('products.variants', AdminProductVariantController::class)->only(['store', 'update', 'destroy'])->shallow();

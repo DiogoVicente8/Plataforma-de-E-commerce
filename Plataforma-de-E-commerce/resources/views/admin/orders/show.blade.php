@@ -45,6 +45,19 @@
                 </div>
             </section>
 
+            @if (in_array($order->status, [\App\Enums\OrderStatus::Paid, \App\Enums\OrderStatus::Shipped], true))
+                <section class="rounded-lg border border-amber-200 bg-white p-6 shadow-sm">
+                    <h3 class="mb-2 text-lg font-medium text-gray-900">{{ __('Reembolso') }}</h3>
+                    <p class="mb-4 text-sm text-gray-600">{{ __('Esta ação marca a encomenda como reembolsada no sistema.') }}</p>
+                    <x-input-error :messages="$errors->get('refund')" class="mb-3" />
+                    <form method="POST" action="{{ route('admin.orders.refund', $order) }}" onsubmit="return confirm(this.dataset.confirm);" data-confirm="{{ __('Marcar esta encomenda como reembolsada?') }}">
+                        @csrf
+                        @method('PATCH')
+                        <x-primary-button>{{ __('Marcar como reembolsada') }}</x-primary-button>
+                    </form>
+                </section>
+            @endif
+
             <section class="bg-white p-6 shadow-sm sm:rounded-lg">
                 <h3 class="mb-4 text-lg font-medium text-gray-900">{{ __('Alterar estado') }}</h3>
                 <form method="POST" action="{{ route('admin.orders.update', $order) }}" class="flex flex-wrap items-end gap-3">
@@ -66,7 +79,7 @@
             <section class="rounded-lg border border-red-200 bg-white p-6 shadow-sm">
                 <h3 class="mb-2 text-lg font-medium text-gray-900">{{ __('Eliminar encomenda') }}</h3>
                 <p class="mb-4 text-sm text-gray-600">{{ __('Esta ação elimina a encomenda e os respetivos artigos.') }}</p>
-                <form method="POST" action="{{ route('admin.orders.destroy', $order) }}" onsubmit="return confirm('{{ __('Tem a certeza de que pretende eliminar esta encomenda?') }}');">
+                <form method="POST" action="{{ route('admin.orders.destroy', $order) }}" onsubmit="return confirm(this.dataset.confirm);" data-confirm="{{ __('Tem a certeza de que pretende eliminar esta encomenda?') }}">
                     @csrf
                     @method('DELETE')
                     <x-danger-button>{{ __('Eliminar encomenda') }}</x-danger-button>
