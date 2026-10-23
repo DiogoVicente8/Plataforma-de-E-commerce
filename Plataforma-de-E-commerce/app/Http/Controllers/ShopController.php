@@ -2,36 +2,46 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CatalogFilterRequest;
 use App\Models\Category;
 use App\Models\Product;
-use Illuminate\Http\Request;
+use App\Models\ProductVariant;
 use Illuminate\View\View;
 
 class ShopController extends Controller
 {
-    public function index(Request $request): View
+    public function index(CatalogFilterRequest $request): View
     {
         return $this->catalog($request);
     }
 
-    public function category(Request $request, Category $category): View
+    public function category(CatalogFilterRequest $request, Category $category): View
     {
         return $this->catalog($request, $category);
     }
 
-    private function catalog(Request $request, ?Category $category = null): View
+    private function catalog(CatalogFilterRequest $request, ?Category $category = null): View
     {
-        $search = trim((string) $request->query('q', ''));
+        $filters = $request->validated();
 
         $products = Product::query()
-            ->where('is_active', true)
-            ->when($category, fn ($query) => $query->where('category_id', $category->id))
-            ->when($search !== '', fn ($query) => $query->where('name', 'like', '%'.$search.'%'))
+            ->active()
+            ->when($category, fn ($q) => $q->where('category_id', $category->id))
+            ->search($filters['q'] ?? null)
+            ->withVariant($filters['size'] ?? null, $filters['color'] ?? null, $request->boolean('in_stock'))
+            ->priceBetween($filters['min_price'] ?? null, $filters['max_price'] ?? null)
+            ->sorted($filters['sort'] ?? null)
             ->with(['category', 'images'])
-            ->orderBy('name')
             ->paginate(12)
             ->withQueryString();
 
-        return view('shop.index', compact('products', 'category', 'search'));
+        return view('shop.index', [
+            'products' => $products,
+            'category' => $category,
+            'filters' => $filters,
+            'search' => $filters['q'] ?? '',
+            'sizes' => ProductVariant::distinct()->orderBy('size')->pluck('size'),
+            'colors' => ProductVariant::distinct()->orderBy('color')->pluck('color'),
+        ]);
     }
 }
