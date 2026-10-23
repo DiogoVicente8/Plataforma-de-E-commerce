@@ -39,6 +39,19 @@ A API REST versionada utiliza tokens Laravel Sanctum. Consulta a [documentação
 curl -H "Authorization: Bearer SEU_TOKEN" http://127.0.0.1:8000/api/v1/products
 ```
 
+## Configuração de produção
+
+```env
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://o-teu-dominio
+SESSION_SECURE_COOKIE=true
+SESSION_SAME_SITE=lax
+SANCTUM_EXPIRATION=480
+```
+
+Em produção, cria o administrador manualmente, porque o seeder não cria utilizadores de demonstração nesse ambiente.
+
 ## Tecnologias
 
 - PHP 8.3 ou superior e Laravel 13

@@ -1,10 +1,12 @@
-9 # API REST
+# API REST
 
 Base URL local: `http://127.0.0.1:8000/api/v1`.
 
 ## Autenticação
 
 Envia `POST /auth/login` com email, password e, opcionalmente, `device_name`. O token retornado deve ser enviado nos pedidos protegidos no cabeçalho `Authorization: Bearer <token>`. O logout revoga o token usado no pedido.
+
+Os tokens expiram ao fim do tempo definido por `SANCTUM_EXPIRATION` (480 minutos por omissão).
 
 ## Pontos de acesso
 
