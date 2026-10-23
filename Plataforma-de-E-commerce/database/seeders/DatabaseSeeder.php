@@ -16,11 +16,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->seedUser('Admin', 'admin@loja.test', UserRole::Admin);
-        $this->seedUser('Cliente', 'cliente@loja.test', UserRole::Customer);
-
         $this->call(CatalogSeeder::class);
-        $this->call(OrderSeeder::class);
+
+        if (! app()->isProduction()) {
+            $this->seedUser('Admin', 'admin@loja.test', UserRole::Admin);
+            $this->seedUser('Cliente', 'cliente@loja.test', UserRole::Customer);
+            $this->call(OrderSeeder::class);
+        }
     }
 
     private function seedUser(string $name, string $email, UserRole $role): User
