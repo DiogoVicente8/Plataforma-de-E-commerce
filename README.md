@@ -219,3 +219,5 @@ erDiagram
 ## Licença
 
 Projeto académico, desenvolvido para fins de avaliação.
+
+Em desenvolvimento (MAIL_MAILER=log), o link de verificação aparece em storage/logs/laravel.log.
