@@ -53,6 +53,7 @@
                             </button>
                         </x-slot>
                         <x-slot name="content">
+                            <x-dropdown-link :href="route('account.orders.index')">{{ __('As minhas encomendas') }}</x-dropdown-link>
                             <x-dropdown-link :href="route('profile.edit')">{{ __('Perfil') }}</x-dropdown-link>
                             @if (Auth::user()->isAdmin())
                                 <x-dropdown-link :href="route('admin.dashboard')">{{ __('Administração') }}</x-dropdown-link>
@@ -126,6 +127,7 @@
                         <li><a href="{{ route('pages.contact') }}" class="hover:text-gray-900">{{ __('Contactos') }}</a></li>
                     @endif
                     @auth
+                        <li><a href="{{ route('account.orders.index') }}" class="hover:text-gray-900">{{ __('As minhas encomendas') }}</a></li>
                         <li><a href="{{ route('profile.edit') }}" class="hover:text-gray-900">{{ __('A minha conta') }}</a></li>
                     @else
                         <li><a href="{{ route('login') }}" class="hover:text-gray-900">{{ __('Entrar') }}</a></li>

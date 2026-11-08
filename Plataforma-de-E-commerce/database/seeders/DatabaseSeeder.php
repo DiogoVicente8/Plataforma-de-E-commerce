@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
     {
         return User::unguarded(fn (): User => User::updateOrCreate(
             ['email' => $email],
-            ['name' => $name, 'password' => 'password', 'role' => $role],
+            ['name' => $name, 'password' => 'password', 'role' => $role, 'email_verified_at' => now()],
         ));
     }
 }
