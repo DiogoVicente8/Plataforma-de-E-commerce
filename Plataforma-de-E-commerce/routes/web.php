@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Account\OrderController as AccountOrderController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
@@ -36,4 +37,8 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::resource('products.images', AdminProductImageController::class)->only(['store', 'destroy'])->shallow();
     });
 
+Route::middleware(['auth', 'verified'])->prefix('conta')->name('account.')->group(function () {
+    Route::get('/encomendas', [AccountOrderController::class, 'index'])->name('orders.index');
+    Route::get('/encomendas/{order}', [AccountOrderController::class, 'show'])->name('orders.show');
+});
 require __DIR__.'/auth.php';
