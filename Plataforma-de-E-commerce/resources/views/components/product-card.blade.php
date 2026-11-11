@@ -1,10 +1,6 @@
 @props(['product'])
 
-@php
-    $image = $product->images->first();
-    // O link para a página do produto aparece quando essa rota existir (semana 6).
-    $href = Route::has('shop.product') ? route('shop.product', $product->slug) : null;
-@endphp
+@php($image = $product->images->first())
 
 <article class="group relative">
     <div class="aspect-[3/4] overflow-hidden rounded-lg bg-gray-100">
@@ -18,11 +14,7 @@
     <div class="mt-3">
         <p class="text-xs uppercase tracking-wide text-gray-500">{{ $product->category->name }}</p>
         <h3 class="mt-1 text-sm font-medium">
-            @if ($href)
-                <a href="{{ $href }}" class="before:absolute before:inset-0">{{ $product->name }}</a>
-            @else
-                {{ $product->name }}
-            @endif
+            <a href="{{ route('shop.product', $product) }}" class="before:absolute before:inset-0">{{ $product->name }}</a>
         </h3>
         <x-price :cents="$product->price_cents" class="mt-1 block text-sm font-semibold" />
     </div>
