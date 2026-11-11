@@ -14,9 +14,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', HomeController::class)->name('home');
 Route::get('/loja', [ShopController::class, 'index'])->name('shop.index');
 Route::get('/loja/{category:slug}', [ShopController::class, 'category'])->name('shop.category');
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
