@@ -14,6 +14,16 @@ class ProductVariant extends Model
     /** @use HasFactory<ProductVariantFactory> */
     use HasFactory;
 
+    public const SIZES = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL'];
+
+    // Posição do tamanho na lista; tamanhos fora da lista ficam no fim.
+    public static function sizeOrder(string $size): int
+    {
+        $position = array_search($size, self::SIZES, true);
+
+        return $position === false ? count(self::SIZES) : $position;
+    }
+
     protected function casts(): array
     {
         return [

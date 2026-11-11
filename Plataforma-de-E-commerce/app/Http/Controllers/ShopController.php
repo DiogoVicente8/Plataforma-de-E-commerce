@@ -40,7 +40,7 @@ class ShopController extends Controller
             'category' => $category,
             'filters' => $filters,
             'search' => $filters['q'] ?? '',
-            'sizes' => ProductVariant::distinct()->orderBy('size')->pluck('size'),
+            'sizes' => ProductVariant::distinct()->pluck('size')->sortBy(ProductVariant::sizeOrder(...))->values(),
             'colors' => ProductVariant::distinct()->orderBy('color')->pluck('color'),
         ]);
     }
