@@ -20,6 +20,28 @@ class ShopController extends Controller
         return $this->catalog($request, $category);
     }
 
+    public function show(Product $product): View
+    {
+        abort_unless($product->is_active, 404);
+
+        $product->load(['category', 'images', 'variants']);
+
+        $related = Product::query()
+            ->active()
+            ->where('category_id', $product->category_id)
+            ->whereKeyNot($product->id)
+            ->with(['category', 'images'])
+            ->latest()
+            ->take(4)
+            ->get();
+
+        return view('shop.product', [
+            'product' => $product,
+            'variants' => $product->variants->sortBy(fn ($variant) => [ProductVariant::sizeOrder($variant->size), $variant->color]),
+            'related' => $related,
+        ]);
+    }
+
     private function catalog(CatalogFilterRequest $request, ?Category $category = null): View
     {
         $filters = $request->validated();

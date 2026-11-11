@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', HomeController::class)->name('home');
 Route::get('/loja', [ShopController::class, 'index'])->name('shop.index');
 Route::get('/loja/{category:slug}', [ShopController::class, 'category'])->name('shop.category');
-
+Route::get('/produto/{product:slug}', [ShopController::class, 'show'])->name('shop.product');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
