@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Account\AddressController;
 use App\Http\Controllers\Account\OrderController as AccountOrderController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
@@ -46,5 +47,11 @@ Route::middleware(['auth', 'verified', 'admin'])
 Route::middleware(['auth', 'verified'])->prefix('conta')->name('account.')->group(function () {
     Route::get('/encomendas', [AccountOrderController::class, 'index'])->name('orders.index');
     Route::get('/encomendas/{order}', [AccountOrderController::class, 'show'])->name('orders.show');
+    Route::resource('moradas', AddressController::class)
+        ->except('show')
+        ->parameters(['moradas' => 'address'])
+        ->names('addresses')
+        ->middleware('customer');
 });
+
 require __DIR__.'/auth.php';
