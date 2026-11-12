@@ -1,0 +1,99 @@
+[
+    {
+        "category": "Bikinis",
+        "name": "Top de bikini bandeau estampado",
+        "description": "Top de bikini bandeau estampado. Parte inferior vendida separadamente.",
+        "price_cents": 1995,
+        "color": "Multicolor",
+        "stock": {
+            "XS": 2,
+            "S": 8,
+            "M": 5,
+            "L": 3
+        },
+        "image": "bikini-1.jpg",
+        "image_url": "https://static.zara.net/assets/public/5de5/48fa/dda74d82aa3b/0709429f4b96/02910014330-000-p/02910014330-000-p.jpg?w=800",
+        "source_url": "https://www.zara.com/pt/pt/soutien-de-biquini-estampado-bandeau-p02910014.html"
+    },
+    {
+        "category": "Bikinis",
+        "name": "Cueca de bikini estampada",
+        "description": "Cueca de bikini estampada. Top vendido separadamente.",
+        "price_cents": 1995,
+        "color": "Multicolor",
+        "stock": {
+            "XS": 2,
+            "S": 8,
+            "M": 5,
+            "L": 0
+        },
+        "image": "bikini-2-praia.jpg",
+        "image_url": "https://static.zara.net/assets/public/f5fc/0db7/581b47a89a9e/b56a1f6e2f2b/02856226330-p/02856226330-p.jpg?w=800",
+        "source_url": "https://www.zara.com/jp/ja/woman-beachwear-l1052.html"
+    },
+    {
+        "category": "Bikinis",
+        "name": "Top de bikini triangular castanho",
+        "description": "Top de bikini triangular castanho. Parte inferior vendida separadamente.",
+        "price_cents": 1995,
+        "color": "Castanho",
+        "stock": {
+            "XS": 2,
+            "S": 8,
+            "M": 5,
+            "L": 3
+        },
+        "image": "bikini-3.jpg",
+        "image_url": "https://static.zara.net/assets/public/1e5b/8bc7/7fb54f81b0b5/046fa01f81f0/02910040700-p/02910040700-p.jpg?w=800",
+        "source_url": "https://www.zara.com/pt/pt/soutien-de-biquini-liso-cortininha-p02910040.html"
+    },
+    {
+        "category": "Bikinis",
+        "name": "Cueca de bikini preta com laços",
+        "description": "Cueca de bikini preta com laços. Top vendido separadamente.",
+        "price_cents": 1995,
+        "color": "Preto",
+        "stock": {
+            "XS": 2,
+            "S": 8,
+            "M": 5,
+            "L": 3
+        },
+        "image": "bikini-4.jpg",
+        "image_url": "https://static.zara.net/assets/public/cd2c/922d/fe54421faa3c/bd65ebf09e11/00167065800-p/00167065800-p.jpg?w=800",
+        "source_url": "https://www.zara.com/pt/pt/cuecas-de-biquini-com-atilhos-p00167065.html"
+    },
+    {
+        "category": "Bikinis",
+        "name": "Cueca de bikini cru com laços",
+        "description": "Cueca de bikini cru com laços. Top vendido separadamente.",
+        "price_cents": 1995,
+        "color": "Cru",
+        "stock": {
+            "XS": 0,
+            "S": 0,
+            "M": 0,
+            "L": 0
+        },
+        "image": "bikini-5.jpg",
+        "image_url": "https://static.zara.net/assets/public/4210/f715/f52b48ba8aea/a4013e5e3f8c/00167209712-p/00167209712-p.jpg?w=800",
+        "source_url": "https://www.zara.com/pt/pt/cuecas-de-biquini-lisas-com-lacos-p00167209.html"
+    },
+    {
+        "category": "Bikinis",
+        "name": "Top de bikini com pregas",
+        "description": "Top de bikini com pregas. Parte inferior vendida separadamente.",
+        "price_cents": 1995,
+        "color": "Castanho",
+        "stock": {
+            "XS": 2,
+            "S": 8,
+            "M": 5,
+            "L": 3
+        },
+        "image": "bikini-6.jpg",
+        "image_url": "https://static.zara.net/assets/public/fcb9/b804/9a9240c3884d/4a5030c99a39/02910207700-p/02910207700-p.jpg?w=800",
+        "source_url": "https://www.zara.com/pt/pt/top-de-biquini-pregas-p02910207.html"
+    }
+]
+

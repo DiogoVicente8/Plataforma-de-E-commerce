@@ -29,7 +29,10 @@
                     <p class="mt-6 whitespace-pre-line text-gray-700">{{ $product->description }}</p>
                 @endif
 
-                <fieldset class="mt-8">
+                @if (! auth()->user()?->isAdmin())
+                <form method="POST" action="{{ route('cart.store', $product) }}" class="mt-8">
+                @csrf
+                <fieldset>
                     <legend class="text-sm font-medium">{{ __('Tamanho e cor') }}</legend>
                     <div class="mt-3 flex flex-wrap gap-2">
                         @forelse ($variants as $variant)
@@ -37,14 +40,25 @@
                                 'cursor-pointer rounded-md border px-4 py-2 text-sm has-[:checked]:border-gray-900 has-[:checked]:bg-gray-900 has-[:checked]:text-white',
                                 'cursor-not-allowed text-gray-400 line-through' => $variant->stock === 0,
                             ])>
-                                <input type="radio" name="variant_id" value="{{ $variant->id }}" class="sr-only" @disabled($variant->stock === 0)>
+                                <input type="radio" name="variant_id" value="{{ $variant->id }}" class="sr-only" required @checked(old('variant_id') == $variant->id) @disabled($variant->stock <= 0)>
                                 {{ $variant->size }} · {{ $variant->color }}
+                                @if ($variant->price_cents !== null)
+                                    <x-price :cents="$variant->price_cents" />
+                                @endif
                             </label>
                         @empty
                             <p class="text-sm text-gray-500">{{ __('Esta peça ainda não tem tamanhos disponíveis.') }}</p>
                         @endforelse
                     </div>
                 </fieldset>
+                <x-input-error :messages="$errors->get('variant_id')" class="mt-2" />
+                <label for="quantity" class="mt-5 block text-sm font-medium">{{ __('Quantidade') }}</label>
+                <input id="quantity" type="number" name="quantity" min="1" value="{{ old('quantity', 1) }}" required class="mt-2 w-24 rounded-lg border-gray-300 focus:border-gray-900 focus:ring-gray-900">
+                <x-input-error :messages="$errors->get('quantity')" class="mt-2" />
+                <button type="submit" @disabled(! $variants->contains(fn ($variant) => $variant->stock > 0)) class="mt-5 block rounded-full bg-gray-900 px-6 py-3 text-sm text-white hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50">{{ __('Adicionar ao carrinho') }}</button>
+                </form>
+                <div class="mt-4"><x-favorite-button :product="$product" /></div>
+                @endif
             </div>
         </div>
 
