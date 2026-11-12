@@ -57,6 +57,7 @@
                                 <x-dropdown-link :href="route('admin.dashboard')">{{ __('Painel de Administração') }}</x-dropdown-link>
                             @else
                                 <x-dropdown-link :href="route('account.orders.index')">{{ __('As minhas encomendas') }}</x-dropdown-link>
+                                <x-dropdown-link :href="route('account.addresses.index')">{{ __('As minhas moradas') }}</x-dropdown-link>
                                 <x-dropdown-link :href="route('profile.edit')">{{ __('Perfil') }}</x-dropdown-link>
                             @endif
                             <form method="POST" action="{{ route('logout') }}">
