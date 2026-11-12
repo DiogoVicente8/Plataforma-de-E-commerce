@@ -1,0 +1,194 @@
+[
+    {
+        "category": "Vestidos",
+        "name": "Vestido midi de linho com alforzes",
+        "description": "Vestido midi azul, sem mangas, com cintura marcada e acabamento leve.",
+        "price_cents": 3995,
+        "color": "Azul",
+        "stock": {
+            "XS": 0,
+            "S": 8,
+            "M": 3,
+            "L": 0
+        },
+        "image": "zara-1.jpg",
+        "image_url": "https://static.zara.net/assets/public/53cf/c0c3/6648438fbe40/26439af82248/07164789400-p/07164789400-p.jpg?w=800",
+        "source_url": "https://www.zara.com/pt/pt/vestido-midi-de-linho-com-nervuras-p07164789.html"
+    },
+    {
+        "category": "Vestidos",
+        "name": "Vestido midi de linho com flor",
+        "description": "Vestido em tom areia com aplicação floral e decote nas costas.",
+        "price_cents": 3995,
+        "color": "Bege-claro",
+        "stock": {
+            "XS": 0,
+            "S": 0,
+            "M": 0,
+            "L": 0
+        },
+        "image": "zara-2.jpg",
+        "image_url": "https://static.zara.net/assets/public/30a6/78b2/437d4af4b83e/b75c4adf6653/08741229052-p/08741229052-p.jpg?w=800",
+        "source_url": "https://www.zara.com/pt/pt/vestido-midi-combinado-em-linho-p08741229.html"
+    },
+    {
+        "category": "Vestidos",
+        "name": "Vestido túnica de linho branco",
+        "description": "Vestido branco de corte túnica, com mangas compridas e bolsos frontais.",
+        "price_cents": 6995,
+        "color": "Branco",
+        "stock": {
+            "XS": 4,
+            "S": 12,
+            "M": 6,
+            "L": 2
+        },
+        "image": "zara-3.jpg",
+        "image_url": "https://static.zara.net/assets/public/4636/a71f/7a354d2d942b/c9f4e2d9bb01/09063834250-p/09063834250-p.jpg?w=800",
+        "source_url": "https://www.zara.com/pt/pt/vestido-tunica-100-linho-p09063834.html"
+    },
+    {
+        "category": "Blusas e Camisas",
+        "name": "Camisa de linho branca",
+        "description": "Camisa branca de manga comprida e corte descontraído para o dia a dia.",
+        "price_cents": 2995,
+        "color": "Branco",
+        "stock": {
+            "XS": 5,
+            "S": 10,
+            "M": 0,
+            "L": 4
+        },
+        "image": "zara-4.jpg",
+        "image_url": "https://static.zara.net/assets/public/fc4f/839a/51d249f290d9/cf893d067661/04786093250-p/04786093250-p.jpg?w=800",
+        "source_url": "https://www.zara.com/pt/pt/camisa-100-linho-zw-collection-p04786030.html"
+    },
+    {
+        "category": "Blusas e Camisas",
+        "name": "Camisa às riscas de manga abalonada",
+        "description": "Camisa às riscas azuis e brancas, com decote em bico e mangas volumosas.",
+        "price_cents": 2795,
+        "color": "Azul / Branco",
+        "stock": {
+            "XS": 0,
+            "S": 0,
+            "M": 0,
+            "L": 0
+        },
+        "image": "zara-5.jpg",
+        "image_url": "https://static.zara.net/assets/public/f30f/a380/3d0d49b8b8e4/a9d6126d89d8/03293058044-p/03293058044-p.jpg?w=800",
+        "source_url": "https://www.zara.com/pt/pt/camisa-as-riscas-com-linho-e-manga-abalonada-p03293058.html"
+    },
+    {
+        "category": "Blusas e Camisas",
+        "name": "Camisa de linho com bolso",
+        "description": "Camisa em tom vinho com bolso de peito e botões à frente.",
+        "price_cents": 3595,
+        "color": "Vinho",
+        "stock": {
+            "XS": 2,
+            "S": 6,
+            "M": 9,
+            "L": 0
+        },
+        "image": "zara-6.jpg",
+        "image_url": "https://static.zara.net/assets/public/653f/f7a0/ec6842269ded/d42c92be836d/05344210660-p/05344210660-p.jpg?w=800",
+        "source_url": "https://www.zara.com/pt/pt/camisa-100-linho-com-bolso-zw-collection-p05344010.html"
+    },
+    {
+        "category": "Calças e Saias",
+        "name": "Calças barrel de linho",
+        "description": "Calças de perna ampla em tom vinho, com cintura elástica e bolsos laterais.",
+        "price_cents": 3995,
+        "color": "Vinho",
+        "stock": {
+            "XS": 0,
+            "S": 3,
+            "M": 7,
+            "L": 2
+        },
+        "image": "zara-7.jpg",
+        "image_url": "https://static.zara.net/assets/public/613a/277d/973a4d0da692/4663f1e46710/04344240660-p/04344240660-p.jpg?w=800",
+        "source_url": "https://www.zara.com/pt/pt/calcas-barrel-em-linho-100-zw-collection-p04344045.html"
+    },
+    {
+        "category": "Calças e Saias",
+        "name": "Calças retas de linho bege",
+        "description": "Calças bege de corte reto, com cintura subida e elástica.",
+        "price_cents": 2795,
+        "color": "Bege-claro",
+        "stock": {
+            "XS": 0,
+            "S": 0,
+            "M": 0,
+            "L": 0
+        },
+        "image": "zara-8.jpg",
+        "image_url": "https://static.zara.net/assets/public/be58/fc99/c1d640de9c43/0668ceb85987/09929141052-p/09929141052-p.jpg?w=800",
+        "source_url": "https://www.zara.com/pt/pt/calcas-retas-com-linho-p09929141.html"
+    },
+    {
+        "category": "Calças e Saias",
+        "name": "Calças de linho com aberturas",
+        "description": "Calças brancas de corte fluido, com cordão na cintura e aberturas na bainha.",
+        "price_cents": 3595,
+        "color": "Branco",
+        "stock": {
+            "XS": 8,
+            "S": 14,
+            "M": 5,
+            "L": 1
+        },
+        "image": "zara-9.jpg",
+        "image_url": "https://static.zara.net/assets/public/5d0b/62e7/988c430fb9c3/3a9835a1aa36/01936330250-p/01936330250-p.jpg?w=800",
+        "source_url": "https://www.zara.com/pt/pt/calcas-100-linho-com-aberturas-zw-collection-p01936334.html"
+    },
+    {
+        "category": "Casacos",
+        "name": "Blazer de linho com pinças",
+        "description": "Blazer em tom areia, com cintura ajustada, lapelas e bolsos com aba.",
+        "price_cents": 5995,
+        "color": "Areia",
+        "stock": {
+            "XS": 1,
+            "S": 5,
+            "M": 8,
+            "L": 0
+        },
+        "image": "zara-10.jpg",
+        "image_url": "https://static.zara.net/assets/public/d1bd/07aa/35f04a83a0b8/7b03a7c3ae5b/07748856081-p/07748856081-p.jpg?w=800",
+        "source_url": "https://www.zara.com/pt/pt/blazer-com-pincas-e-linho-p07748856.html"
+    },
+    {
+        "category": "Casacos",
+        "name": "Colete de linho com cinto",
+        "description": "Colete azul-marinho de fecho cruzado, com cinto do mesmo tecido.",
+        "price_cents": 3595,
+        "color": "Azul-marinho",
+        "stock": {
+            "XS": 3,
+            "S": 0,
+            "M": 6,
+            "L": 2
+        },
+        "image": "zara-11.jpg",
+        "image_url": "https://static.zara.net/assets/public/19ac/8e4e/957b44f4b9f9/34d55e679656/07763392401-p/07763392401-p.jpg?w=800",
+        "source_url": "https://www.zara.com/pt/pt/colete-com-cinto-em-linho-p07763392.html"
+    },
+    {
+        "category": "Casacos",
+        "name": "Casaco de linho com franjas",
+        "description": "Casaco cru de manga comprida, com franjas e bainha assimétrica.",
+        "price_cents": 12900,
+        "color": "Cru",
+        "stock": {
+            "XS": 0,
+            "S": 0,
+            "M": 0,
+            "L": 0
+        },
+        "image": "zara-12.jpg",
+        "image_url": "https://static.zara.net/assets/public/7e8d/668f/d24c4399a9c2/00ca94d3f426/07012800712-p/07012800712-p.jpg?w=800",
+        "source_url": "https://www.zara.com/pt/pt/casaco-com-franjas-e-linho-zw-collection-p07012800.html"
+    }
+]

@@ -30,7 +30,7 @@ class ShopController extends Controller
             ->active()
             ->where('category_id', $product->category_id)
             ->whereKeyNot($product->id)
-            ->with(['category', 'images'])
+            ->with(['category', 'images'])->withExists(['variants as in_stock' => fn ($query) => $query->where('stock', '>', 0)])
             ->latest()
             ->take(4)
             ->get();
@@ -53,7 +53,7 @@ class ShopController extends Controller
             ->withVariant($filters['size'] ?? null, $filters['color'] ?? null, $request->boolean('in_stock'))
             ->priceBetween($filters['min_price'] ?? null, $filters['max_price'] ?? null)
             ->sorted($filters['sort'] ?? null)
-            ->with(['category', 'images'])
+            ->with(['category', 'images'])->withExists(['variants as in_stock' => fn ($query) => $query->where('stock', '>', 0)])
             ->paginate(12)
             ->withQueryString();
 

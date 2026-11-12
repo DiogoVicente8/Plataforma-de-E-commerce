@@ -18,7 +18,7 @@ class HomeController extends Controller
 
         $featured = Product::query()
             ->where('is_active', true)
-            ->with(['category', 'images'])
+            ->with(['category', 'images'])->withExists(['variants as in_stock' => fn ($query) => $query->where('stock', '>', 0)])
             ->latest()
             ->take(8)
             ->get();

@@ -14,8 +14,14 @@
             @endif
 
             <div class="bg-white p-6 shadow-sm sm:rounded-lg">
-                <form method="POST" action="{{ $isEdit ? route('admin.products.update', $product) : route('admin.products.store') }}" class="space-y-6">
+                <form method="POST" enctype="multipart/form-data" action="{{ $isEdit ? route('admin.products.update', $product) : route('admin.products.store') }}" class="space-y-6">
                     @csrf
+                    @if ($errors->any())
+                        <div role="alert" class="rounded-lg bg-red-50 p-4 text-sm text-red-800">
+                            <p>{{ __('Corrija os campos indicados. As alterações ainda não foram guardadas.') }}</p>
+                            <x-input-error :messages="$errors->all()" class="mt-2" />
+                        </div>
+                    @endif
                     @if ($isEdit)
                         @method('PUT')
                     @endif
@@ -56,10 +62,26 @@
                         <x-input-error :messages="$errors->get('description')" class="mt-2" />
                     </div>
 
+                    @unless ($isEdit)
+                        @include('admin.products.create-variants')
+                        <div>
+                            <x-input-label for="image" :value="__('Imagem principal (opcional)')" />
+                            <input id="image" name="image" type="file" accept="image/png,image/jpeg,image/webp" aria-describedby="image-help" class="mt-2 block w-full rounded-lg border border-gray-300 p-3 text-sm file:mr-4 file:rounded-full file:border-0 file:bg-gray-900 file:px-4 file:py-2 file:text-sm file:text-white focus:outline-none focus:ring-2 focus:ring-gray-900" />
+                            <p id="image-help" class="mt-2 text-sm text-gray-500">{{ __('JPG, PNG ou WEBP, até 2 MB. Pode adicionar mais imagens ao editar o produto.') }}</p>
+                            <x-input-error :messages="$errors->get('image')" class="mt-2" />
+                        </div>
+                    @endunless
+
                     <label class="inline-flex items-center gap-2">
                         <input type="checkbox" name="is_active" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" @checked(old('is_active', $isEdit ? $product->is_active : true))>
                         <span class="text-sm text-gray-700">{{ __('Visível na loja') }}</span>
                     </label>
+
+                    @if ($isEdit)
+                        @include('admin.products.create-variants')
+                        @include('admin.products.images')
+                        <p class="text-sm text-gray-600">{{ __('As alterações às variantes e imagens só são aplicadas ao guardar alterações. Se houver erros, volte a selecionar o ficheiro da imagem.') }}</p>
+                    @endif
 
                     <div class="flex items-center gap-4">
                         <x-primary-button>{{ $isEdit ? __('Guardar alterações') : __('Criar produto') }}</x-primary-button>
@@ -68,10 +90,7 @@
                 </form>
             </div>
 
-            @if ($isEdit)
-                @include('admin.products.variants')
-                @include('admin.products.images')
-            @endif
+
         </div>
     </div>
 </x-app-layout>
