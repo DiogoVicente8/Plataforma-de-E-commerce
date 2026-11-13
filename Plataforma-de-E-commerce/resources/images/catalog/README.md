@@ -1,5 +1,11 @@
 # Fotografias do catálogo de demonstração
 
+## Imagens ilustrativas geradas
+
+Os 16 ficheiros em `generated/` foram gerados com IA em 13/11/2026 a partir dos nomes, descrições e cores dos produtos de demonstração que não tinham fotografias. São ilustrações fotográficas do tipo de peça, não fotografias dos artigos reais.
+
+`php artisan db:seed --class=GeneratedProductImagesSeeder` associa estas imagens apenas aos produtos sem fotografias, sem alterar os seus dados, stock ou imagens existentes. Este seeder também é executado pelo `CatalogSeeder`.
+
 As 12 fotografias foram obtidas nas páginas públicas da Zara Portugal em 12/11/2026, a pedido do responsável pelo projeto. As URLs de origem e das imagens estão em `database/seeders/data/zara-catalog.json`. As fotografias pertencem aos respetivos titulares; a sua inclusão não implica uma licença de utilização comercial.
 
 Os nomes e descrições são adaptados ao catálogo de demonstração. Os preços são exemplos em cêntimos e o stock é fictício; não representam a disponibilidade atual da Zara.

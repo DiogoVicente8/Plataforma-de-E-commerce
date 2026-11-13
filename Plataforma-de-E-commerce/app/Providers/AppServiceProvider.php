@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Category;
+use App\Support\Cart;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -26,6 +27,12 @@ class AppServiceProvider extends ServiceProvider
 
         // Categorias do menu da loja: só as que têm produtos à venda.
         View::composer('layouts.shop', function ($view) {
+            $customer = auth()->user();
+            $view->with('favoritesCount', $customer && ! $customer->isAdmin()
+                ? $customer->favorites()->active()->count()
+                : 0);
+            $view->with('cartCount', $customer?->isAdmin() ? 0 : Cart::items()->sum('quantity'));
+
             $view->with('menuCategories', Category::query()
                 ->whereHas('products', fn ($query) => $query->where('is_active', true))
                 ->orderBy('name')

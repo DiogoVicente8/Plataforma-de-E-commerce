@@ -22,7 +22,18 @@
                 <tbody class="divide-y divide-gray-200">
                     @foreach ($order->items as $item)
                         <tr>
-                            <td class="px-4 py-3">{{ $item->product_name }}</td>
+                            <td class="px-4 py-3">
+                                @php($image = $item->product?->images->first())
+                                <div class="flex items-center gap-4">
+                                    @if ($image)
+                                        <img src="{{ asset('storage/'.$image->path) }}" alt="{{ $image->alt_text ?? $item->product_name }}" loading="lazy"
+                                             class="h-24 w-16 shrink-0 rounded-md bg-gray-100 object-cover">
+                                    @else
+                                        <div class="flex h-24 w-16 shrink-0 items-center justify-center rounded-md bg-gray-100 px-1 text-center text-xs text-gray-400">{{ __('Sem imagem') }}</div>
+                                    @endif
+                                    <span>{{ $item->product_name }}</span>
+                                </div>
+                            </td>
                             <td class="px-4 py-3">{{ $item->quantity }}</td>
                             <td class="px-4 py-3">{{ $item->formattedUnitPrice() }}</td>
                             <td class="px-4 py-3">{{ $item->formattedSubtotal() }}</td>

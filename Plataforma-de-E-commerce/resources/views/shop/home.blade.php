@@ -6,7 +6,7 @@
     <section class="bg-stone-100">
         <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
             <p class="text-sm uppercase tracking-widest text-gray-500">{{ __('Own the room') }}</p>
-             <h1 class="mt-3 max-w-xl text-4xl font-semibold leading-tight sm:text-5xl">{{ __('Para a mulher real que quer sentir-se bem todos os dias, sem esforço.') }}</h1>
+            <h1 class="mt-3 max-w-xl text-4xl font-semibold leading-tight sm:text-5xl">{{ __('Para a mulher real que quer sentir-se bem todos os dias, sem esforço.') }}</h1>
             <a href="{{ route('shop.index') }}" class="mt-8 inline-block rounded-full bg-gray-900 px-6 py-3 text-sm font-medium text-white hover:bg-gray-700">{{ __('Ver a coleção') }}</a>
         </div>
     </section>

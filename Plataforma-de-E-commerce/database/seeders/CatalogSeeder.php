@@ -74,5 +74,6 @@ class CatalogSeeder extends Seeder
 
         $this->call(PhotoCatalogSeeder::class);
         $this->call(BikiniCatalogSeeder::class);
+        $this->call(GeneratedProductImagesSeeder::class);
     }
 }

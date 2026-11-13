@@ -2,6 +2,7 @@
 
 use App\Enums\UserRole;
 use App\Models\OrderItem;
+use App\Models\Product;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 
@@ -37,6 +38,28 @@ it('shows the customers own order and escapes article names', function () {
         ->assertDontSee('<script>alert(1)</script>', false)
         ->assertSee('15,00')
         ->assertSee('30,00');
+});
+
+it('shows the product photo and handles products without images or deleted products', function () {
+    $customer = User::factory()->create();
+    $order = $customer->orders()->create(['total_cents' => 3000]);
+    $product = Product::factory()->create();
+    $product->images()->create(['path' => 'products/order-photo.jpg', 'alt_text' => 'Fotografia do artigo', 'position' => 0]);
+    $order->items()->create(['product_id' => $product->id, 'product_name' => 'Artigo comprado', 'quantity' => 1, 'unit_price_cents' => 1500]);
+    $withoutImage = Product::factory()->create();
+    $order->items()->create(['product_id' => $withoutImage->id, 'product_name' => 'Artigo sem fotografia', 'quantity' => 1, 'unit_price_cents' => 1500]);
+
+    $this->actingAs($customer)->get(route('account.orders.show', $order))
+        ->assertOk()
+        ->assertSee(asset('storage/products/order-photo.jpg'))
+        ->assertSee('Fotografia do artigo')
+        ->assertSee('Sem imagem');
+
+    $product->delete();
+
+    $this->get(route('account.orders.show', $order))->assertOk()
+        ->assertSee('Artigo comprado')
+        ->assertDontSee(asset('storage/products/order-photo.jpg'));
 });
 
 it('forbids opening another customers order', function () {

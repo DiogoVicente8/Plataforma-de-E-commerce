@@ -23,7 +23,7 @@ class OrderController extends Controller
     {
         Gate::authorize('view', $order);
 
-        $order->load('items');
+        $order->load('items.product.images');
 
         return view('account.orders.show', compact('order'));
     }

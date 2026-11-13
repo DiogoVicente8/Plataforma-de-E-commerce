@@ -9,9 +9,11 @@ test('guests can manage a cart with current variant prices', function () {
     $variant = ProductVariant::factory()->create(['stock' => 5, 'price_cents' => 1500]);
     $this->post(route('cart.store', $variant->product), ['variant_id' => $variant->id, 'quantity' => 2, 'price_cents' => 1])
         ->assertRedirect()->assertSessionHas("cart.{$variant->id}", 2);
-    $this->get(route('cart.index'))->assertOk()->assertViewHas('total', 3000);
+    $this->get(route('cart.index'))->assertOk()->assertViewHas('total', 3000)
+        ->assertSee('aria-label="Carrinho (2)"', false);
     $this->patch(route('cart.update', $variant), ['quantity' => 3])->assertSessionHas("cart.{$variant->id}", 3);
     $this->delete(route('cart.destroy', $variant))->assertSessionMissing("cart.{$variant->id}");
+    $this->get(route('shop.index'))->assertSee('aria-label="Carrinho (0)"', false);
 });
 
 test('cart rejects another products variant and unavailable quantities', function () {
@@ -45,10 +47,12 @@ test('favorites require authentication and are isolated between accounts', funct
     $this->actingAs($user)->post(route('favorites.store', $product))->assertRedirect();
     $this->post(route('favorites.store', $product))->assertRedirect();
     expect($user->favorites()->count())->toBe(1);
-    $this->get(route('favorites.index'))->assertOk()->assertSee($product->name);
+    $this->get(route('favorites.index'))->assertOk()->assertSee($product->name)
+        ->assertSee('aria-label="Favoritos (1)"', false);
     $this->delete(route('favorites.destroy', $product))->assertRedirect();
     expect($user->favorites()->count())->toBe(0);
     expect($other->favorites()->count())->toBe(1);
+    $this->get(route('shop.index'))->assertSee('aria-label="Favoritos (0)"', false);
 });
 
 test('product pages expose cart and favorite actions and reject inactive favorites', function () {
