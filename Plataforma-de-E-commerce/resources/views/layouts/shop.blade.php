@@ -127,15 +127,16 @@
             <div>
                 <p class="font-semibold">{{ __('Ajuda') }}</p>
                 <ul class="mt-2 space-y-2 text-gray-600">
-                    {{-- As páginas de contactos e políticas chegam na semana 9 --}}
-                    @if (Route::has('pages.contact'))
-                        <li><a href="{{ route('pages.contact') }}" class="hover:text-gray-900">{{ __('Contactos') }}</a></li>
-                    @endif
+                    <li><a href="{{ route('pages.contact') }}" class="hover:text-gray-900">{{ __('Contactos') }}</a></li>
+                    <li><a href="{{ route('pages.returns') }}" class="hover:text-gray-900">{{ __('Trocas e devoluções') }}</a></li>
+                    <li><a href="{{ route('pages.privacy') }}" class="hover:text-gray-900">{{ __('Política de privacidade') }}</a></li>
+                    <li><a href="{{ route('pages.terms') }}" class="hover:text-gray-900">{{ __('Termos e condições') }}</a></li>
                     @auth
                         @if (Auth::user()->isAdmin())
                         <li><a href="{{ route('admin.dashboard') }}" class="hover:text-gray-900">{{ __('Painel de Administração') }}</a></li>
                         @else
                         <li><a href="{{ route('account.orders.index') }}" class="hover:text-gray-900">{{ __('As minhas encomendas') }}</a></li>
+                        <li><a href="{{ route('account.addresses.index') }}" class="hover:text-gray-900">{{ __('As minhas moradas') }}</a></li>
                         <li><a href="{{ route('profile.edit') }}" class="hover:text-gray-900">{{ __('A minha conta') }}</a></li>
                         @endif
                     @else
