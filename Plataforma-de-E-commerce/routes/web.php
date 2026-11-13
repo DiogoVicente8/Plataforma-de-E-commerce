@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductImageController as AdminProductImageController;
 use App\Http\Controllers\Admin\ProductVariantController as AdminProductVariantController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
@@ -18,14 +19,22 @@ Route::get('/', HomeController::class)->name('home');
 Route::get('/loja', [ShopController::class, 'index'])->name('shop.index');
 Route::get('/loja/{category:slug}', [ShopController::class, 'category'])->name('shop.category');
 Route::get('/produto/{product:slug}', [ShopController::class, 'show'])->name('shop.product');
+
 Route::view('/contactos', 'pages.contact')->name('pages.contact');
 Route::view('/devolucoes', 'pages.returns')->name('pages.returns');
 Route::view('/privacidade', 'pages.privacy')->name('pages.privacy');
 Route::view('/termos', 'pages.terms')->name('pages.terms');
+
 Route::get('/carrinho', [CartController::class, 'index'])->middleware('customer')->name('cart.index');
 Route::post('/carrinho/{product}', [CartController::class, 'store'])->middleware('customer')->name('cart.store');
 Route::patch('/carrinho/{variant}', [CartController::class, 'update'])->middleware('customer')->name('cart.update');
 Route::delete('/carrinho/{variant}', [CartController::class, 'destroy'])->middleware('customer')->name('cart.destroy');
+
+Route::middleware(['auth', 'verified', 'customer'])->group(function () {
+    Route::get('/finalizar-encomenda', [CheckoutController::class, 'create'])->name('checkout.create');
+    Route::post('/finalizar-encomenda', [CheckoutController::class, 'store'])->name('checkout.store');
+});
+
 Route::middleware('auth')->group(function () {
     Route::get('/favoritos', [FavoriteController::class, 'index'])->middleware('customer')->name('favorites.index');
     Route::post('/favoritos/{product}', [FavoriteController::class, 'store'])->middleware('customer')->name('favorites.store');

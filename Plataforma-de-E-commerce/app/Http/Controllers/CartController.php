@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Support\Cart;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -13,15 +14,7 @@ class CartController extends Controller
 {
     public function index(Request $request): View
     {
-        $cart = $request->session()->get('cart', []);
-        $variants = ProductVariant::query()->with('product')->whereIn('id', array_keys($cart))
-            ->whereHas('product', fn ($query) => $query->active())->get();
-        $items = $variants->map(function ($variant) use ($cart) {
-            $quantity = min((int) $cart[$variant->id], $variant->stock);
-            $price = $variant->price_cents ?? $variant->product->price_cents;
-
-            return ['variant' => $variant, 'quantity' => $quantity, 'price' => $price, 'subtotal' => $price * $quantity];
-        });
+        $items = Cart::items();
         // Reconcile the basket with current availability; prices always come from the database.
         $request->session()->put('cart', $items->filter(fn ($item) => $item['quantity'] > 0)
             ->mapWithKeys(fn ($item) => [$item['variant']->id => $item['quantity']])->all());
