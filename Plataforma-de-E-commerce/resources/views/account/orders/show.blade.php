@@ -37,6 +37,10 @@
                 </tfoot>
             </table>
         </div>
+        @if ($order->shipping_address)
+            <h2 class="mt-8 font-semibold">{{ __('Morada de entrega') }}</h2>
+            <p class="mt-2 whitespace-pre-line text-sm text-gray-700">{{ $order->shipping_address }}</p>
+        @endif
         <a href="{{ route('account.orders.index') }}" class="mt-6 inline-block underline">{{ __('Voltar às minhas encomendas') }}</a>
     </div>
 @endsection

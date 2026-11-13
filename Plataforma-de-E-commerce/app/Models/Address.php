@@ -27,6 +27,17 @@ class Address extends Model
         return config("countries.{$this->phone_country}.dial").' '.$this->phone;
     }
 
+    // Morada em texto, para ficar guardada na encomenda mesmo que depois seja alterada ou apagada.
+    public function toShippingText(): string
+    {
+        return implode("\n", [
+            $this->recipient_name,
+            $this->street,
+            "{$this->postal_code} {$this->city}",
+            $this->formattedPhone(),
+        ]);
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

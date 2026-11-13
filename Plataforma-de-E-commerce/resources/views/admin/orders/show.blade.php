@@ -18,6 +18,9 @@
                     <div><dt class="text-sm text-gray-500">{{ __('Cliente') }}</dt><dd class="font-medium text-gray-900">{{ $order->user?->name ?? __('Utilizador removido') }}</dd><dd class="text-sm text-gray-600">{{ $order->user?->email ?? '—' }}</dd></div>
                     <div><dt class="text-sm text-gray-500">{{ __('Data') }}</dt><dd class="font-medium text-gray-900">{{ $order->created_at->format('d/m/Y H:i') }}</dd></div>
                     <div><dt class="text-sm text-gray-500">{{ __('Estado') }}</dt><dd class="mt-1"><x-order-status-badge :status="$order->status" /></dd></div>
+                    @if ($order->shipping_address)
+                        <div><dt class="text-sm text-gray-500">{{ __('Morada de entrega') }}</dt><dd class="whitespace-pre-line text-sm text-gray-900">{{ $order->shipping_address }}</dd></div>
+                    @endif
                 </dl>
             </section>
 

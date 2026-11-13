@@ -46,6 +46,11 @@
                 <x-price :cents="$total" />
             </div>
         @endif
-        <a href="{{ route('shop.index') }}" class="mt-8 inline-block rounded-full bg-gray-900 px-6 py-3 text-sm text-white hover:bg-gray-700">{{ __('Continuar a comprar') }}</a>
+            <div class="mt-8 flex flex-wrap justify-end gap-4">
+                <a href="{{ route('shop.index') }}" class="rounded-full border border-gray-300 px-6 py-3 text-sm hover:border-gray-900">{{ __('Continuar a comprar') }}</a>
+                 @if ($total > 0)
+                    <a href="{{ route('checkout.create') }}" class="rounded-full bg-gray-900 px-6 py-3 text-sm text-white hover:bg-gray-700">{{ __('Finalizar encomenda') }}</a>
+                 @endif
+            </div>
     </section>
 @endsection
