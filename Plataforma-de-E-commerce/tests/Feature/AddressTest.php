@@ -2,6 +2,17 @@
 
 use App\Models\Address;
 use App\Models\User;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+
+beforeEach(function () {
+    // Nos testes nunca se contacta o serviço real: 4440-123 existe, 0000-000 não.
+    Http::fake([
+        '*/cp/4440-123' => Http::response(['CP' => '4440-123', 'Localidade' => 'Campo']),
+        '*/cp/0000-000' => Http::response(['erro' => 'Postal Code not found!'], 404),
+    ]);
+});
 
 it('creates the first address as the default one', function () {
     $customer = User::factory()->create();
@@ -62,3 +73,39 @@ it('does not let a customer edit or delete another customers address', function 
 
     expect($address->fresh())->not->toBeNull();
 });
+
+it('fills in the city from the postal code when it is left empty', function () {
+    $customer = User::factory()->create();
+
+    $this->actingAs($customer)->post(route('account.addresses.store'), [
+        'recipient_name' => 'Ana Silva',
+        'phone_country' => 'PT',
+        'phone' => '912345678',
+        'street' => 'Rua dos Académicos, 10',
+        'postal_code' => '4440-123',
+    ])->assertSessionHasNoErrors();
+
+    expect($customer->addresses()->sole()->city)->toBe('Campo');
+});
+
+it('asks for the city when the postal code service cannot give it', function (string $postalCode) {
+    Http::fake(['*/cp/4000-001' => fn () => throw new ConnectionException('Timeout')]);
+    Log::spy();
+
+    $this->actingAs(User::factory()->create())
+        ->post(route('account.addresses.store'), [
+            'recipient_name' => 'Ana Silva',
+            'phone_country' => 'PT',
+            'phone' => '912345678',
+            'street' => 'Rua de Valongo, 10',
+            'postal_code' => $postalCode,
+        ])
+        ->assertSessionHasErrors('city');
+
+    // Só a falha do serviço fica registada; um código desconhecido não é uma falha.
+    if ($postalCode === '4000-001') {
+        Log::shouldHaveReceived('warning')->once();
+    } else {
+        Log::shouldNotHaveReceived('warning');
+    }
+})->with(['unknown postal code' => '0000-000', 'service down' => '4000-001']);

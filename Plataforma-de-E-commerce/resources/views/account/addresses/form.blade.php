@@ -53,7 +53,7 @@
                 </div>
                 <div class="col-span-2">
                     <x-input-label for="city" :value="__('Localidade')" />
-                    <x-text-input id="city" name="city" type="text" class="mt-1 block w-full" :value="old('city', $address->city)" required autocomplete="address-level2" />
+                    <x-text-input id="city" name="city" type="text" class="mt-1 block w-full" :value="old('city', $address->city)" placeholder="{{ __('Vazia: preenchida pelo código postal') }}" autocomplete="address-level2" />
                 </div>
             </div>
             <x-input-error :messages="$errors->get('postal_code')" />

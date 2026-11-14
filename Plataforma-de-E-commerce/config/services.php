@@ -18,6 +18,11 @@ return [
         'key' => env('POSTMARK_API_KEY'),
     ],
 
+    'geoapi' => [
+        'url' => env('GEOAPI_URL', 'https://json.geoapi.pt'),
+        'timeout' => env('GEOAPI_TIMEOUT', 5),
+    ],
+
     'resend' => [
         'key' => env('RESEND_API_KEY'),
     ],
