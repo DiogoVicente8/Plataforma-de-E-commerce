@@ -11,6 +11,7 @@ use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -46,6 +47,12 @@ class ProductController extends Controller
         $data['slug'] = $data['slug'] ?? Str::slug($data['name']);
         $product = Product::query()->create($data)->load(['category', 'variants', 'images']);
 
+        Log::channel('audit')->info('Produto criado.', [
+            'product_id' => $product->id,
+            'user_id' => $request->user()->id,
+            'origin' => 'api',
+        ]);
+
         return (new ProductResource($product))
             ->response()
             ->setStatusCode(201)
@@ -56,12 +63,24 @@ class ProductController extends Controller
     {
         $product->update($request->validated());
 
+        Log::channel('audit')->info('Produto alterado.', [
+            'product_id' => $product->id,
+            'user_id' => $request->user()->id,
+            'origin' => 'api',
+        ]);
+
         return new ProductResource($product->load(['category', 'variants', 'images']));
     }
 
     public function destroy(Product $product, DeleteProduct $deleteProduct): Response
     {
         $deleteProduct->execute($product);
+
+        Log::channel('audit')->info('Produto eliminado.', [
+            'product_id' => $product->id,
+            'user_id' => auth()->id(),
+            'origin' => 'api',
+        ]);
 
         return response()->noContent();
     }

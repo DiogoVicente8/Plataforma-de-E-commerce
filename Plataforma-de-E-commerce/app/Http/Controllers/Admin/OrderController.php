@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\UpdateOrderStatusRequest;
 use App\Models\Order;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class OrderController extends Controller
@@ -44,7 +45,15 @@ class OrderController extends Controller
 
     public function update(UpdateOrderStatusRequest $request, Order $order): RedirectResponse
     {
+        $previousStatus = $order->status->value;
         $order->update($request->validated());
+
+        Log::channel('audit')->info('Estado da encomenda alterado.', [
+            'order_id' => $order->id,
+            'previous_status' => $previousStatus,
+            'new_status' => $order->status->value,
+            'user_id' => $request->user()->id,
+        ]);
 
         return redirect()->route('admin.orders.show', $order)->with('success', __('Estado da encomenda atualizado.'));
     }
@@ -58,12 +67,22 @@ class OrderController extends Controller
 
         $order->update(['status' => OrderStatus::Refunded]);
 
+        Log::channel('audit')->info('Encomenda reembolsada.', [
+            'order_id' => $order->id,
+            'user_id' => auth()->id(),
+        ]);
+
         return redirect()->route('admin.orders.show', $order)->with('success', __('Encomenda marcada como reembolsada.'));
     }
 
     public function destroy(Order $order): RedirectResponse
     {
         $order->delete();
+
+        Log::channel('audit')->info('Encomenda eliminada.', [
+            'order_id' => $order->id,
+            'user_id' => auth()->id(),
+        ]);
 
         return redirect()->route('admin.orders.index')->with('success', __('Encomenda eliminada.'));
     }

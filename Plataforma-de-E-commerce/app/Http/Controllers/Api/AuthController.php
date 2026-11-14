@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -26,6 +27,8 @@ class AuthController extends Controller
 
         $token = $user->createToken($credentials['device_name'] ?? 'api-token')->plainTextToken;
 
+        Log::channel('audit')->info('Login na API.', ['user_id' => $user->id]);
+
         return response()->json([
             'token' => $token,
             'user' => $this->userData($user),
@@ -35,6 +38,8 @@ class AuthController extends Controller
     public function logout(Request $request): Response
     {
         $request->user()->currentAccessToken()->delete();
+
+        Log::channel('audit')->info('Logout da API.', ['user_id' => $request->user()->id]);
 
         return response()->noContent();
     }
