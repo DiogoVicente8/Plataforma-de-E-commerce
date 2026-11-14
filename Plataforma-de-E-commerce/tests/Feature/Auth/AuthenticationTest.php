@@ -20,6 +20,20 @@ test('users can authenticate using the login screen', function () {
     $response->assertRedirect(route('home', absolute: false));
 });
 
+test('unverified customers are sent to verification before their intended destination', function () {
+    $user = User::factory()->unverified()->create();
+
+    $response = $this->withSession(['url.intended' => route('profile.edit')])->post('/login', [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticatedAs($user);
+    $response->assertRedirect(route('verification.notice'));
+    $response->assertSessionHas('url.intended', route('profile.edit'));
+    $this->get(route('verification.notice'))->assertOk();
+});
+
 test('users can not authenticate with invalid password', function () {
     $user = User::factory()->create();
 

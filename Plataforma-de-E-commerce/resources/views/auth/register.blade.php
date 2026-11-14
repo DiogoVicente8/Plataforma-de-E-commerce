@@ -32,12 +32,16 @@
                     </div>
                     <div>
                         <x-input-label for="password" :value="__('Palavra-passe')" />
-                        <input id="password" class="mt-2 block w-full rounded-lg border-gray-300 focus:border-gray-900 focus:ring-gray-900" type="password" name="password" required autocomplete="new-password" @if ($errors->has('password')) aria-invalid="true" aria-describedby="password-error" @endif />
+                        <x-password-toggle for="password">
+                            <input id="password" class="block w-full rounded-lg border-gray-300 pr-12 focus:border-gray-900 focus:ring-gray-900" type="password" :type="visible ? 'text' : 'password'" name="password" required autocomplete="new-password" @if ($errors->has('password')) aria-invalid="true" aria-describedby="password-error" @endif />
+                        </x-password-toggle>
                         <x-input-error id="password-error" :messages="$errors->get('password')" class="mt-2" />
                     </div>
                     <div>
                         <x-input-label for="password_confirmation" :value="__('Confirmar palavra-passe')" />
-                        <input id="password_confirmation" class="mt-2 block w-full rounded-lg border-gray-300 focus:border-gray-900 focus:ring-gray-900" type="password" name="password_confirmation" required autocomplete="new-password" @if ($errors->has('password_confirmation')) aria-invalid="true" aria-describedby="password-confirmation-error" @endif />
+                        <x-password-toggle for="password_confirmation">
+                            <input id="password_confirmation" class="block w-full rounded-lg border-gray-300 pr-12 focus:border-gray-900 focus:ring-gray-900" type="password" :type="visible ? 'text' : 'password'" name="password_confirmation" required autocomplete="new-password" @if ($errors->has('password_confirmation')) aria-invalid="true" aria-describedby="password-confirmation-error" @endif />
+                        </x-password-toggle>
                         <x-input-error id="password-confirmation-error" :messages="$errors->get('password_confirmation')" class="mt-2" />
                     </div>
                     <button type="submit" class="w-full rounded-full bg-gray-900 px-6 py-3 text-sm font-medium text-white transition hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2">{{ __('Criar conta') }}</button>

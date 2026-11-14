@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
             $view->with('favoritesCount', $customer && ! $customer->isAdmin()
                 ? $customer->favorites()->active()->count()
                 : 0);
-            $view->with('cartCount', $customer?->isAdmin() ? 0 : Cart::items()->sum('quantity'));
+            $view->with('cartCount', $customer?->isAdmin() ? 0 : Cart::count());
 
             $view->with('menuCategories', Category::query()
                 ->whereHas('products', fn ($query) => $query->where('is_active', true))

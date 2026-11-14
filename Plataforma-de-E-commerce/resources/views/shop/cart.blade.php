@@ -10,8 +10,18 @@
         <div class="mt-8 space-y-4">
             @forelse ($items as $item)
                 @php($variant = $item['variant'])
+                @php($image = $variant->product->images->first())
                 <article class="flex flex-wrap items-center justify-between gap-6 rounded-xl border border-gray-200 p-6">
-                    <div>
+                    <div class="flex min-w-0 flex-1 flex-wrap items-start gap-5">
+                        <a href="{{ route('shop.product', $variant->product) }}" class="block shrink-0">
+                            @if ($image)
+                                <img src="{{ asset('storage/'.$image->path) }}" alt="{{ $image->alt_text ?? $variant->product->name }}" loading="lazy"
+                                     class="h-40 w-28 rounded-lg bg-gray-100 object-cover">
+                            @else
+                                <div class="flex h-40 w-28 items-center justify-center rounded-lg bg-gray-100 text-sm text-gray-400">{{ __('Sem imagem') }}</div>
+                            @endif
+                        </a>
+                        <div class="min-w-0 flex-1">
                         <a href="{{ route('shop.product', $variant->product) }}" class="font-medium hover:underline">{{ $variant->product->name }}</a>
                         <p class="mt-1 text-sm text-gray-600">{{ $variant->size }} · {{ $variant->color }}</p>
                         <x-price :cents="$item['price']" class="mt-2 block text-sm" />
@@ -26,6 +36,7 @@
                                 <button type="submit" class="rounded-full border border-gray-300 px-4 py-2 text-sm hover:border-gray-900">{{ __('Atualizar') }}</button>
                             </form>
                         @endif
+                        </div>
                     </div>
                     <div class="flex items-center gap-6">
                         <x-price :cents="$item['subtotal']" class="font-semibold" />

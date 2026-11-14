@@ -7,10 +7,12 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 beforeEach(function () {
-    // Nos testes nunca se contacta o serviço real: 4440-123 existe, 0000-000 não.
+    // As respostas são simuladas; nenhum pedido pode contactar o serviço real.
+    Http::preventStrayRequests();
+
     Http::fake([
         '*/cp/4440-123' => Http::response(['CP' => '4440-123', 'Localidade' => 'Campo']),
-        '*/cp/0000-000' => Http::response(['erro' => 'Postal Code not found!'], 404),
+        '*/cp/9999-999' => Http::response(['erro' => 'Postal Code not found!'], 404),
     ]);
 });
 
@@ -102,10 +104,15 @@ it('asks for the city when the postal code service cannot give it', function (st
         ])
         ->assertSessionHasErrors('city');
 
+    if ($postalCode === '9999-999') {
+        Http::assertSent(fn ($request) => $request->url() === config('services.geoapi.url').'/cp/'.$postalCode);
+        Http::assertSentCount(1);
+    }
+
     // Só a falha do serviço fica registada; um código desconhecido não é uma falha.
     if ($postalCode === '4000-001') {
         Log::shouldHaveReceived('warning')->once();
     } else {
         Log::shouldNotHaveReceived('warning');
     }
-})->with(['unknown postal code' => '0000-000', 'service down' => '4000-001']);
+})->with(['unknown postal code' => '9999-999', 'service down' => '4000-001']);

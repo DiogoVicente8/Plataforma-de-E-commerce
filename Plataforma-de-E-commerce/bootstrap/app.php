@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureCustomerEmailIsVerified;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Middleware\EnsureUserIsNotAdmin;
 use App\Http\Middleware\SecurityHeaders;
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->append(SecurityHeaders::class);
+        $middleware->web(append: [EnsureCustomerEmailIsVerified::class]);
         $middleware->throttleApi();
 
         $middleware->alias([

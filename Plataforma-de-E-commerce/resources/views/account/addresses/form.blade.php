@@ -46,14 +46,14 @@
                 <x-input-error :messages="$errors->get('street')" class="mt-2" />
             </div>
 
-            <div class="grid grid-cols-3 gap-4">
+            <div x-data class="grid grid-cols-3 gap-4">
                 <div>
                     <x-input-label for="postal_code" :value="__('Código postal')" />
-                    <x-text-input id="postal_code" name="postal_code" type="text" class="mt-1 block w-full" :value="old('postal_code', $address->postal_code)" required placeholder="0000-000" autocomplete="postal-code" />
+                    <x-text-input id="postal_code" name="postal_code" type="text" class="mt-1 block w-full" :value="old('postal_code', $address->postal_code)" x-on:input="$refs.city.value = ''" required placeholder="0000-000" autocomplete="postal-code" />
                 </div>
                 <div class="col-span-2">
                     <x-input-label for="city" :value="__('Localidade')" />
-                    <x-text-input id="city" name="city" type="text" class="mt-1 block w-full" :value="old('city', $address->city)" placeholder="{{ __('Vazia: preenchida pelo código postal') }}" autocomplete="address-level2" />
+                    <x-text-input id="city" name="city" type="text" class="mt-1 block w-full" :value="old('city', $address->city)" x-ref="city" placeholder="{{ __('Vazia: preenchida pelo código postal') }}" autocomplete="address-level2" />
                 </div>
             </div>
             <x-input-error :messages="$errors->get('postal_code')" />

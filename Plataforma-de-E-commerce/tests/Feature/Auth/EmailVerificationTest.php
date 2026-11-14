@@ -2,8 +2,26 @@
 
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
+
+test('unverified customers must verify before continuing to browse or checkout', function () {
+    $user = User::factory()->unverified()->create();
+    $this->actingAs($user);
+
+    foreach (['home', 'shop.index', 'cart.index', 'checkout.create'] as $route) {
+        $this->get(route($route))->assertRedirect(route('verification.notice'));
+    }
+
+    $this->get(route('verification.notice'))->assertOk();
+    Notification::fake();
+    $this->post(route('verification.send'))->assertSessionHas('status', 'verification-link-sent');
+    Notification::assertSentTo($user, VerifyEmail::class);
+    $this->post(route('logout'))->assertRedirect('/');
+    $this->assertGuest();
+});
 
 test('email verification screen can be rendered', function () {
     $user = User::factory()->unverified()->create();
