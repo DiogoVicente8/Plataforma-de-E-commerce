@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -47,7 +48,7 @@ class ProductController extends Controller
                 }
             }
 
-            DB::transaction(function () use ($request, $path): void {
+            $product = DB::transaction(function () use ($request, $path): Product {
                 $product = Product::create($request->productData());
                 foreach ($request->validated('variants') ?? [] as $variant) {
                     $product->variants()->create([
@@ -66,6 +67,8 @@ class ProductController extends Controller
                         'position' => 0,
                     ]);
                 }
+
+                return $product;
             });
         } catch (Throwable $exception) {
             if ($path) {
@@ -74,6 +77,12 @@ class ProductController extends Controller
 
             throw $exception;
         }
+
+        Log::channel('audit')->info('Produto criado.', [
+            'product_id' => $product->id,
+            'user_id' => $request->user()->id,
+            'origin' => 'admin',
+        ]);
 
         return redirect()->route('admin.products.index')->with('success', __('Produto criado.'));
     }
@@ -139,12 +148,24 @@ class ProductController extends Controller
 
         Storage::disk('public')->delete($deletedPaths);
 
+        Log::channel('audit')->info('Produto alterado.', [
+            'product_id' => $product->id,
+            'user_id' => $request->user()->id,
+            'origin' => 'admin',
+        ]);
+
         return redirect()->route('admin.products.index')->with('success', __('Produto atualizado.'));
     }
 
     public function destroy(Product $product, DeleteProduct $deleteProduct): RedirectResponse
     {
         $deleteProduct->execute($product);
+
+        Log::channel('audit')->info('Produto eliminado.', [
+            'product_id' => $product->id,
+            'user_id' => auth()->id(),
+            'origin' => 'admin',
+        ]);
 
         return redirect()->route('admin.products.index')->with('success', __('Produto eliminado.'));
     }

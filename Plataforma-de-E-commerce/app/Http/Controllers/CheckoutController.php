@@ -8,6 +8,7 @@ use App\Support\Cart;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
@@ -79,6 +80,13 @@ class CheckoutController extends Controller
         });
 
         $request->session()->forget('cart');
+
+        Log::channel('audit')->info('Encomenda criada.', [
+            'order_id' => $order->id,
+            'user_id' => $request->user()->id,
+            'total_cents' => $order->total_cents,
+            'item_count' => $items->sum('quantity'),
+        ]);
 
         return redirect()->route('account.orders.show', $order)->with('status', __('Encomenda feita! Obrigado pela tua compra.'));
     }
