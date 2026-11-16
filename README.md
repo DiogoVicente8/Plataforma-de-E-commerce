@@ -27,9 +27,9 @@ Aplicação web do lado do servidor para uma loja de roupa, com dois perfis de u
 | CRUD de categorias no admin | Feito |
 | CRUD de produtos no admin | Feito |
 | Catálogo público, favoritos, carrinho, moradas e checkout | Feito (sem pagamento) |
-| API REST | Por Fazer |
+| API REST | Feito |
 | Consumo de serviço externo (GEO API PT) | Feito |
-| Testes automatizados | Feito (95 testes) |
+| Testes automatizados | Feito (103 testes) |
 | Pagamento com Stripe, cupões e publicação | Planeado |
 
 ## Serviço externo
@@ -43,6 +43,10 @@ As páginas 403, 404, 419, 429 e 500 apresentam mensagens em português, sem det
 O canal `audit` regista alterações de estado, reembolsos e eliminações de encomendas, encomendas criadas pelo checkout, e criação, alteração e eliminação de produtos no admin. Guarda apenas identificadores, estados, origem e os valores de total e quantidade da encomenda, sem passwords, tokens, emails ou moradas completas.
 
 O caminho configurado é `storage/logs/audit.log`, dentro de `Plataforma-de-E-commerce/`. A rotação diária cria ficheiros `audit-AAAA-MM-DD.log`, com retenção de 30 dias.
+
+## API
+
+A API REST versionada utiliza tokens Laravel Sanctum. Consulta a [documentação da API](docs/api.md) e a coleção Postman em `docs/postman_collection.json`.
 
 ## Configuração de produção
 

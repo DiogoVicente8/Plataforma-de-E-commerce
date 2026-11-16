@@ -1,0 +1,21 @@
+{
+  "info": {
+    "name": "Plataforma de E-commerce API v1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://127.0.0.1:8000/api/v1" },
+    { "key": "token", "value": "" },
+    { "key": "productId", "value": "1" }
+  ],
+  "item": [
+    { "name": "Login", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"email\":\"admin@loja.test\",\"password\":\"password\",\"device_name\":\"Postman\"}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/auth/login" } },
+    { "name": "Logout", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/auth/logout" } },
+    { "name": "Me", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/auth/me" } },
+    { "name": "Listar produtos", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/products?sort=newest", "host": ["{{baseUrl}}"], "path": ["products"], "query": [{ "key": "sort", "value": "newest" }] } } },
+    { "name": "Ver produto", "request": { "method": "GET", "url": "{{baseUrl}}/products/{{productId}}" } },
+    { "name": "Criar produto", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"category_id\":1,\"name\":\"Camisola\",\"description\":\"Algodão orgânico\",\"price_cents\":2599,\"is_active\":true}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/products" } },
+    { "name": "Atualizar produto", "request": { "method": "PATCH", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"price_cents\":2799}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/products/{{productId}}" } },
+    { "name": "Eliminar produto", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/products/{{productId}}" } }
+  ]
+}
