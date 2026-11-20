@@ -14,6 +14,11 @@ class Category extends Model
     /** @use HasFactory<CategoryFactory> */
     use HasFactory;
 
+    protected function casts(): array
+    {
+        return ['collection_announced_at' => 'datetime'];
+    }
+
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\OrderStatus;
 use App\Models\ProductVariant;
+use App\Notifications\OrderPlaced;
 use App\Support\Cart;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -80,6 +81,8 @@ class CheckoutController extends Controller
         });
 
         $request->session()->forget('cart');
+
+        $request->user()->notify(new OrderPlaced($order));
 
         Log::channel('audit')->info('Encomenda criada.', [
             'order_id' => $order->id,

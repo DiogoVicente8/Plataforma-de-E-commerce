@@ -6,6 +6,37 @@ use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
+use Symfony\Component\Mailer\Exception\TransportException;
+
+test('verification resend handles mail transport failures without verifying the customer', function () {
+    $user = User::factory()->unverified()->create();
+    Notification::shouldReceive('send')->once()->andThrow(new TransportException('550 Too many emails per second'));
+
+    $this->actingAs($user)->from(route('verification.notice'))
+        ->post(route('verification.send'))
+        ->assertRedirect(route('verification.notice'))
+        ->assertSessionHasErrors([
+            'email' => 'Não foi possível enviar o email de verificação neste momento. Aguarde um minuto e tente novamente.',
+        ])
+        ->assertSessionMissing('status');
+
+    expect($user->fresh()->hasVerifiedEmail())->toBeFalse();
+});
+
+test('verification resend waits a minute between emails', function () {
+    $user = User::factory()->unverified()->create();
+    Notification::fake();
+    $this->actingAs($user)->from(route('verification.notice'));
+
+    $this->post(route('verification.send'))->assertSessionHas('status', 'verification-link-sent');
+    $this->post(route('verification.send'))->assertRedirect(route('verification.notice'))
+        ->assertSessionHasErrors('email');
+    Notification::assertSentToTimes($user, VerifyEmail::class, 1);
+
+    $this->travel(61)->seconds();
+    $this->post(route('verification.send'))->assertSessionHas('status', 'verification-link-sent');
+    Notification::assertSentToTimes($user, VerifyEmail::class, 2);
+});
 
 test('unverified customers must verify before continuing to browse or checkout', function () {
     $user = User::factory()->unverified()->create();
