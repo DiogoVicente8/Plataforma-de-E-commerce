@@ -51,6 +51,9 @@
 
                 {{-- Menu de conta --}}
                 @auth
+                    @unless (auth()->user()->isAdmin())
+                        <x-notification-bell />
+                    @endunless
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button type="button" class="inline-flex items-center gap-1 hover:text-gray-600">

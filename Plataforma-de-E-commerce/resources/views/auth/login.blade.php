@@ -18,6 +18,8 @@
                 <h2 class="text-2xl font-semibold">{{ __('Bem-vinda de volta') }}</h2>
                 <p class="mt-2 text-sm text-gray-600">{{ __('Entre com os dados da sua conta.') }}</p>
                 <x-auth-session-status class="mt-6" :status="session('status')" />
+                <x-input-error :messages="$errors->get('google')" class="mt-4" />
+                <a href="{{ route('auth.google') }}" class="mt-6 flex w-full items-center justify-center rounded-full border border-gray-300 px-6 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2">{{ __('Entrar com Google') }}</a>
 
                 <form method="POST" action="{{ route('login') }}" class="mt-8 space-y-6">
                     @csrf

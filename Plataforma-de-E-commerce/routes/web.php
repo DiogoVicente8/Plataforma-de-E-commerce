@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Account\AddressController;
+use App\Http\Controllers\Account\NotificationController;
 use App\Http\Controllers\Account\OrderController as AccountOrderController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
@@ -52,12 +53,19 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update', 'destroy']);
         Route::patch('orders/{order}/refund', [AdminOrderController::class, 'refund'])->name('orders.refund');
         Route::resource('categories', AdminCategoryController::class)->except(['show']);
+        Route::post('categories/{category}/announce', [AdminCategoryController::class, 'announce'])
+            ->name('categories.announce');
         Route::resource('products', AdminProductController::class)->except(['show']);
         Route::resource('products.variants', AdminProductVariantController::class)->only(['store', 'update', 'destroy'])->shallow();
         Route::resource('products.images', AdminProductImageController::class)->only(['store', 'destroy'])->shallow();
     });
 
 Route::middleware(['auth', 'verified'])->prefix('conta')->name('account.')->group(function () {
+    Route::middleware('customer')->group(function () {
+        Route::get('/notificacoes', [NotificationController::class, 'index'])->name('notifications.index');
+        Route::post('/notificacoes/ler-todas', [NotificationController::class, 'readAll'])->name('notifications.read-all');
+        Route::post('/notificacoes/{notification}/ler', [NotificationController::class, 'read'])->name('notifications.read');
+    });
     Route::get('/encomendas', [AccountOrderController::class, 'index'])->name('orders.index');
     Route::get('/encomendas/{order}', [AccountOrderController::class, 'show'])->name('orders.show');
     Route::resource('moradas', AddressController::class)

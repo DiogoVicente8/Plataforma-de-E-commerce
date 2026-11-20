@@ -25,9 +25,14 @@
             </h2>
 
             <p class="mt-1 text-sm text-gray-600">
-                {{ __('Esta ação é permanente. Introduz a tua palavra-passe para confirmar a eliminação da conta.') }}
+                {{ auth()->user()->google_id
+                    ? __('Esta ação é permanente. Confirma com a conta Google associada ao teu perfil para eliminar a tua conta da loja. A tua conta Google mantém-se.')
+                    : __('Esta ação é permanente. Introduz a tua palavra-passe para confirmar a eliminação da conta.') }}
             </p>
 
+            <x-input-error :messages="$errors->userDeletion->get('google')" class="mt-4" />
+
+            @unless (auth()->user()->google_id)
             <div class="mt-6">
                 <x-input-label for="password" value="{{ __('Palavra-passe') }}" class="sr-only" />
 
@@ -41,6 +46,7 @@
 
                 <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
             </div>
+            @endunless
 
             <div class="mt-6 flex flex-wrap justify-end gap-y-3">
                 <x-secondary-button class="!rounded-full !normal-case !tracking-normal" x-on:click="$dispatch('close')">
@@ -48,7 +54,7 @@
                 </x-secondary-button>
 
                 <x-danger-button class="ms-3 !rounded-full !normal-case !tracking-normal">
-                    {{ __('Eliminar conta') }}
+                    {{ auth()->user()->google_id ? __('Confirmar com Google e eliminar') : __('Eliminar conta') }}
                 </x-danger-button>
             </div>
         </form>

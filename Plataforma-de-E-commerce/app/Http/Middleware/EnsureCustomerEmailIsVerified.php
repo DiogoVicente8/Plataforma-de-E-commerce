@@ -18,7 +18,7 @@ class EnsureCustomerEmailIsVerified
         $user = $request->user();
 
         if ($user && ! $user->isAdmin() && ! $user->hasVerifiedEmail()
-            && ! $request->routeIs('verification.*', 'logout')) {
+            && ! $request->routeIs('verification.*', 'logout', 'auth.google.callback')) {
             return redirect()->route('verification.notice');
         }
 

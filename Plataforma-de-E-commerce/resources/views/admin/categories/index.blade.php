@@ -33,6 +33,14 @@
                                     <td class="px-6 py-4 text-sm text-gray-600">{{ $category->products_count }}</td>
                                     <td class="whitespace-nowrap px-6 py-4 text-right text-sm">
                                         <a class="text-indigo-600 hover:text-indigo-900" href="{{ route('admin.categories.edit', $category) }}">{{ __('Editar') }}</a>
+                                        @if ($category->collection_announced_at)
+                                            <span class="ms-4 text-gray-500">{{ __('Coleção anunciada') }}</span>
+                                        @else
+                                            <form method="POST" action="{{ route('admin.categories.announce', $category) }}" class="ms-4 inline">
+                                                @csrf
+                                                <button type="submit" class="text-indigo-600 hover:text-indigo-900">{{ __('Anunciar coleção') }}</button>
+                                            </form>
+                                        @endif
                                         <form method="POST" action="{{ route('admin.categories.destroy', $category) }}" class="ms-4 inline" onsubmit="return confirm('{{ __('Eliminar esta categoria?') }}')">
                                             @csrf
                                             @method('DELETE')

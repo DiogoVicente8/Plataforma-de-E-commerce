@@ -6,6 +6,7 @@ use App\Enums\OrderStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpdateOrderStatusRequest;
 use App\Models\Order;
+use App\Notifications\OrderStatusChanged;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -45,12 +46,16 @@ class OrderController extends Controller
 
     public function update(UpdateOrderStatusRequest $request, Order $order): RedirectResponse
     {
-        $previousStatus = $order->status->value;
+        $previousStatus = $order->status;
         $order->update($request->validated());
+
+        if ($order->wasChanged('status')) {
+            $order->user?->notify(new OrderStatusChanged($order, $previousStatus));
+        }
 
         Log::channel('audit')->info('Estado da encomenda alterado.', [
             'order_id' => $order->id,
-            'previous_status' => $previousStatus,
+            'previous_status' => $previousStatus->value,
             'new_status' => $order->status->value,
             'user_id' => $request->user()->id,
         ]);
@@ -65,7 +70,9 @@ class OrderController extends Controller
                 ->withErrors(['refund' => __('Só é possível reembolsar encomendas pagas ou enviadas.')]);
         }
 
+        $previousStatus = $order->status;
         $order->update(['status' => OrderStatus::Refunded]);
+        $order->user?->notify(new OrderStatusChanged($order, $previousStatus));
 
         Log::channel('audit')->info('Encomenda reembolsada.', [
             'order_id' => $order->id,

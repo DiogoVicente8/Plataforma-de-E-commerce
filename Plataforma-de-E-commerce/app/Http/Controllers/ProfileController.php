@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Laravel\Socialite\Facades\Socialite;
 
 class ProfileController extends Controller
 {
@@ -42,6 +43,19 @@ class ProfileController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        if ($request->user()->google_id) {
+            if (! config('services.google.client_id') || ! config('services.google.client_secret')) {
+                return back()->withErrors(['google' => 'A confirmação com Google está indisponível. Tenta novamente mais tarde.'], 'userDeletion');
+            }
+
+            $request->session()->put('google_account_deletion', [
+                'user_id' => $request->user()->id,
+                'expires_at' => now()->addMinutes(10)->timestamp,
+            ]);
+
+            return Socialite::driver('google')->with(['prompt' => 'select_account'])->redirect();
+        }
+
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
         ]);
