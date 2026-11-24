@@ -10,7 +10,9 @@ use App\Models\User;
 use App\Notifications\NewCollection;
 use App\Notifications\OrderPlaced;
 use App\Notifications\OrderStatusChanged;
+use App\Services\StripeCheckout;
 use Illuminate\Support\Str;
+use Stripe\Checkout\Session;
 
 it('shows the notification bell only to authenticated customers', function () {
     $this->get(route('home'))->assertDontSee('id="customer-notifications"', false);
@@ -100,28 +102,32 @@ it('stores order updates for the bell without contacting the mail server', funct
         ->assertJsonPath('notifications.0.url', route('account.orders.show', $order, absolute: false));
 });
 
-it('stores order confirmations in the customers notifications', function () {
+it('stores pending payment notifications in the customers notifications', function () {
     $customer = User::factory()->create();
     $order = $customer->orders()->create(['status' => OrderStatus::Pending, 'total_cents' => 2500]);
 
     $customer->notifyNow(new OrderPlaced($order), ['database']);
 
     $this->actingAs($customer)->getJson(route('account.notifications.index'))
-        ->assertOk()->assertJsonPath('notifications.0.title', 'Encomenda recebida')
+        ->assertOk()->assertJsonPath('notifications.0.title', 'Encomenda pendente')
         ->assertJsonPath('notifications.0.kind', 'order');
 });
 
 it('makes an order notification available while its email is still queued', function () {
     config(['queue.default' => 'database']);
+    $this->mock(StripeCheckout::class)->shouldReceive('create')->once()->andReturn(
+        Session::constructFrom(['id' => 'cs_test_notifications', 'url' => 'https://checkout.stripe.com/test'])
+    );
     $customer = User::factory()->create();
     $address = Address::factory()->for($customer)->create();
     $variant = ProductVariant::factory()->create(['stock' => 5]);
 
     $this->actingAs($customer)->withSession(['cart' => [$variant->id => 1]])
-        ->post(route('checkout.store'), ['address_id' => $address->id])->assertRedirect();
+        ->post(route('checkout.store'), ['address_id' => $address->id])
+        ->assertRedirect('https://checkout.stripe.com/test');
 
     $this->getJson(route('account.notifications.index'))->assertOk()
-        ->assertJsonPath('unread_count', 1)->assertJsonPath('notifications.0.title', 'Encomenda recebida');
+        ->assertJsonPath('unread_count', 1)->assertJsonPath('notifications.0.title', 'Encomenda pendente');
     $this->assertDatabaseCount('jobs', 1);
 });
 

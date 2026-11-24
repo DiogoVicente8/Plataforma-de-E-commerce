@@ -29,7 +29,7 @@ Aplicação web do lado do servidor para uma loja de roupa, com dois perfis de u
 | Catálogo público, favoritos, carrinho, moradas e checkout | Feito (sem pagamento) |
 | API REST | Feito |
 | Consumo de serviço externo (GEO API PT) | Feito |
-| Testes automatizados | Feito (103 testes) |
+| Testes automatizados | Feito (149 testes) |
 | Pagamento com Stripe, cupões e publicação | Planeado |
 
 ## Serviço externo
