@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\StripeWebhookController;
 use Illuminate\Support\Facades\Route;
+
+Route::post('/stripe/webhook', StripeWebhookController::class)->name('stripe.webhook');
 
 Route::prefix('v1')->name('api.v1.')->group(function (): void {
     Route::post('/auth/login', [AuthController::class, 'login'])->middleware('throttle:5,1')->name('auth.login');

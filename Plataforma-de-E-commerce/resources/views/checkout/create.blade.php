@@ -37,12 +37,27 @@
                         </li>
                     @endforeach
                 </ul>
+                <div class="mt-4 flex justify-between text-sm text-gray-600">
+                    <span>{{ __('Subtotal dos artigos') }}</span>
+                    <x-price :cents="$subtotal" />
+                </div>
+                <div class="mt-3 flex justify-between text-sm">
+                    <span>{{ __('Portes de envio') }}</span>
+                    @if ($shipping > 0)
+                        <x-price :cents="$shipping" />
+                    @else
+                        <span class="font-medium text-green-700">{{ __('Grátis') }}</span>
+                    @endif
+                </div>
+                @if (config('shipping.free_from_cents') > 0 && $shipping > 0)
+                    <p class="mt-2 text-xs text-gray-500">{{ __('Portes grátis em compras a partir de :amount.', ['amount' => \App\Support\Money::format(config('shipping.free_from_cents'))]) }}</p>
+                @endif
                 <div class="mt-4 flex justify-between border-t border-gray-200 pt-4 text-lg font-semibold">
                     <span>{{ __('Total') }}</span>
                     <x-price :cents="$total" />
                 </div>
-                <p class="mt-2 text-xs text-gray-500">{{ __('O pagamento é confirmado pela loja depois de feita a encomenda.') }}</p>
-                <button type="submit" @disabled($addresses->isEmpty()) class="mt-6 w-full rounded-full bg-gray-900 px-6 py-3 text-sm text-white hover:bg-gray-700 disabled:opacity-50">{{ __('Confirmar encomenda') }}</button>
+                <p class="mt-2 text-xs text-gray-500">{{ __('Vais pagar com cartão ou MB WAY no Stripe. A encomenda fica confirmada após o pagamento. Se não pagares, a reserva expira automaticamente.') }}</p>
+                <button type="submit" @disabled($addresses->isEmpty()) class="mt-6 w-full rounded-full bg-gray-900 px-6 py-3 text-sm text-white hover:bg-gray-700 disabled:opacity-50">{{ __('Confirmar e pagar') }}</button>
             </div>
         </form>
     </div>

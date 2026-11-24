@@ -9,14 +9,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['user_id', 'status', 'total_cents', 'shipping_address'])]
+#[Fillable(['user_id', 'status', 'total_cents', 'shipping_cents', 'shipping_address', 'stripe_checkout_session_id', 'stripe_payment_intent_id'])]
 class Order extends Model
 {
+    protected $attributes = [
+        'shipping_cents' => 0,
+    ];
+
     protected function casts(): array
     {
         return [
             'status' => OrderStatus::class,
             'total_cents' => 'integer',
+            'shipping_cents' => 'integer',
         ];
     }
 
