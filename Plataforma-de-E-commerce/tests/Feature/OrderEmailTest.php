@@ -8,9 +8,18 @@ use App\Models\ProductVariant;
 use App\Models\User;
 use App\Notifications\OrderPlaced;
 use App\Notifications\OrderStatusChanged;
+use App\Services\StripeCheckout;
 use Illuminate\Notifications\SendQueuedNotifications;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Queue;
+use Stripe\Checkout\Session;
+
+beforeEach(function () {
+    config(['shipping.cost_cents' => 0]);
+    $this->mock(StripeCheckout::class)->shouldReceive('create')->andReturn(
+        Session::constructFrom(['id' => 'cs_test_checkout', 'url' => 'https://checkout.stripe.com/test'])
+    );
+});
 
 it('emails the customer an order confirmation with the purchased items and total', function () {
     $customer = User::factory()->create();
@@ -27,6 +36,8 @@ it('emails the customer an order confirmation with the purchased items and total
         $mail = $notification->toMail($customer);
         expect($channels)->toBe(['mail', 'database']);
         expect($notification->orderId)->toBe($order->id);
+        expect($notification->toDatabase($customer)['title'])->toBe('Encomenda pendente');
+        expect($notification->toDatabase($customer)['body'])->toContain('Falta efetuar o pagamento');
         expect($mail->introLines)->toContain('Total: 25,00 €');
         expect(implode(' ', $mail->introLines))->toContain($order->items()->sole()->product_name);
         expect($mail->actionUrl)->toBe(route('account.orders.show', $order));

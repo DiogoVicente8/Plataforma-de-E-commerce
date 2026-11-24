@@ -11,6 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Laravel\Cashier\Cashier;
 
 class OrderController extends Controller
 {
@@ -71,6 +72,11 @@ class OrderController extends Controller
         }
 
         $previousStatus = $order->status;
+        if ($order->stripe_payment_intent_id) {
+            Cashier::stripe()->refunds->create([
+                'payment_intent' => $order->stripe_payment_intent_id,
+            ], ['idempotency_key' => 'order-refund-'.$order->id]);
+        }
         $order->update(['status' => OrderStatus::Refunded]);
         $order->user?->notify(new OrderStatusChanged($order, $previousStatus));
 

@@ -44,8 +44,10 @@ class OrderStatusChanged extends Notification implements ShouldQueue
     public function toDatabase(object $notifiable): array
     {
         return [
-            'title' => 'Encomenda '.$this->status->label(),
-            'body' => 'A tua encomenda #'.$this->orderId.' passou de '.$this->previousStatus->label().' para '.$this->status->label().'.',
+            'title' => $this->status === OrderStatus::Paid ? 'Encomenda recebida' : 'Encomenda '.$this->status->label(),
+            'body' => $this->status === OrderStatus::Paid
+                ? 'Recebemos o pagamento da tua encomenda #'.$this->orderId.'. A tua encomenda está a ser processada.'
+                : 'A tua encomenda #'.$this->orderId.' passou de '.$this->previousStatus->label().' para '.$this->status->label().'.',
             'url' => route('account.orders.show', $this->orderId, absolute: false),
             'kind' => 'order',
             'order_id' => $this->orderId,
@@ -56,7 +58,7 @@ class OrderStatusChanged extends Notification implements ShouldQueue
     {
         $description = match ($this->status) {
             OrderStatus::Pending => 'A tua encomenda está pendente de confirmação de pagamento.',
-            OrderStatus::Paid => 'A loja confirmou o pagamento da tua encomenda.',
+            OrderStatus::Paid => 'Recebemos o pagamento da tua encomenda. A tua encomenda está a ser processada.',
             OrderStatus::Shipped => 'A tua encomenda foi marcada como enviada.',
             OrderStatus::Cancelled => 'A tua encomenda foi cancelada.',
             OrderStatus::Refunded => 'A loja marcou a tua encomenda como reembolsada. Se precisares de esclarecimentos, contacta a loja.',

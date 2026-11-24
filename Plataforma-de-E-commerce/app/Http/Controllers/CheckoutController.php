@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Enums\OrderStatus;
+use App\Models\Order;
 use App\Models\ProductVariant;
 use App\Notifications\OrderPlaced;
+use App\Services\StripeCheckout;
 use App\Support\Cart;
+use App\Support\Shipping;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -16,6 +20,18 @@ use Illuminate\View\View;
 
 class CheckoutController extends Controller
 {
+    public function pay(Request $request, Order $order, StripeCheckout $stripe): RedirectResponse
+    {
+        Gate::authorize('view', $order);
+        abort_unless($order->user_id === $request->user()->id && $order->status === OrderStatus::Pending && $order->stripe_checkout_session_id, 403);
+        $session = $stripe->resume($order);
+        if ($session->status !== 'open') {
+            return redirect()->route('account.orders.show', $order)->with('status', __('O pagamento já terminou ou expirou. Aguarda a atualização da encomenda.'));
+        }
+
+        return redirect()->away($session->url);
+    }
+
     public function create(Request $request): View|RedirectResponse
     {
         $items = Cart::items()->where('quantity', '>', 0);
@@ -26,12 +42,14 @@ class CheckoutController extends Controller
 
         return view('checkout.create', [
             'items' => $items,
-            'total' => $items->sum('subtotal'),
+            'subtotal' => $items->sum('subtotal'),
+            'shipping' => Shipping::cost($items->sum('subtotal')),
+            'total' => $items->sum('subtotal') + Shipping::cost($items->sum('subtotal')),
             'addresses' => $request->user()->addresses()->orderByDesc('is_default')->latest()->get(),
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, StripeCheckout $stripe): RedirectResponse
     {
         $data = $request->validate([
             'address_id' => ['required', Rule::exists('addresses', 'id')->where('user_id', $request->user()->id)],
@@ -48,7 +66,7 @@ class CheckoutController extends Controller
         $address = $request->user()->addresses()->findOrFail($data['address_id']);
 
         // Tudo ou nada: se faltar stock de uma peça, nada é gravado.
-        $order = DB::transaction(function () use ($request, $items, $address) {
+        $order = DB::transaction(function () use ($request, $items, $address, $stripe) {
             foreach ($items as $item) {
                 $variant = $item['variant'];
 
@@ -66,16 +84,22 @@ class CheckoutController extends Controller
 
             $order = $request->user()->orders()->create([
                 'status' => OrderStatus::Pending,
-                'total_cents' => $items->sum('subtotal'),
+                'total_cents' => $items->sum('subtotal') + Shipping::cost($items->sum('subtotal')),
+                'shipping_cents' => Shipping::cost($items->sum('subtotal')),
                 'shipping_address' => $address->toShippingText(),
             ]);
 
             $order->items()->createMany($items->map(fn ($item) => [
                 'product_id' => $item['variant']->product_id,
+                'product_variant_id' => $item['variant']->id,
                 'product_name' => "{$item['variant']->product->name} ({$item['variant']->size} · {$item['variant']->color})",
                 'quantity' => $item['quantity'],
                 'unit_price_cents' => $item['price'],
             ]));
+
+            $session = $stripe->create($order);
+            $order->update(['stripe_checkout_session_id' => $session->id]);
+            $order->setAttribute('checkout_url', $session->url);
 
             return $order;
         });
@@ -91,6 +115,6 @@ class CheckoutController extends Controller
             'item_count' => $items->sum('quantity'),
         ]);
 
-        return redirect()->route('account.orders.show', $order)->with('status', __('Encomenda feita! Obrigado pela tua compra.'));
+        return redirect()->away($order->getAttribute('checkout_url'));
     }
 }

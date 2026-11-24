@@ -47,8 +47,8 @@ class OrderPlaced extends Notification implements ShouldQueue
     public function toDatabase(object $notifiable): array
     {
         return [
-            'title' => 'Encomenda recebida',
-            'body' => 'Recebemos a tua encomenda #'.$this->orderId.'. Total: '.$this->total.'.',
+            'title' => 'Encomenda pendente',
+            'body' => 'A tua encomenda #'.$this->orderId.' está pendente. Falta efetuar o pagamento. Total: '.$this->total.'.',
             'url' => route('account.orders.show', $this->orderId, absolute: false),
             'kind' => 'order',
             'order_id' => $this->orderId,
@@ -58,10 +58,10 @@ class OrderPlaced extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         $message = (new MailMessage)
-            ->subject('Recebemos a tua encomenda #'.$this->orderId.' — '.config('app.name'))
+            ->subject('Pagamento pendente da encomenda #'.$this->orderId.' — '.config('app.name'))
             ->greeting('Olá, '.$notifiable->name.'!')
-            ->line('Recebemos a tua encomenda #'.$this->orderId.'. Obrigado pela tua compra!')
-            ->line('Estado: Pendente. O pagamento será confirmado pela loja.');
+            ->line('A tua encomenda #'.$this->orderId.' está pendente.')
+            ->line('Falta efetuar o pagamento para começarmos a processar a tua encomenda.');
 
         foreach ($this->items as $item) {
             $message->line($item);

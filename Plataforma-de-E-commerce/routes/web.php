@@ -3,6 +3,7 @@
 use App\Http\Controllers\Account\AddressController;
 use App\Http\Controllers\Account\NotificationController;
 use App\Http\Controllers\Account\OrderController as AccountOrderController;
+use App\Http\Controllers\Account\OrderReceiptController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
@@ -34,6 +35,7 @@ Route::delete('/carrinho/{variant}', [CartController::class, 'destroy'])->middle
 Route::middleware(['auth', 'verified', 'customer'])->group(function () {
     Route::get('/finalizar-encomenda', [CheckoutController::class, 'create'])->name('checkout.create');
     Route::post('/finalizar-encomenda', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::post('/encomendas/{order}/pagar', [CheckoutController::class, 'pay'])->name('checkout.pay');
 });
 
 Route::middleware('auth')->group(function () {
@@ -68,6 +70,8 @@ Route::middleware(['auth', 'verified'])->prefix('conta')->name('account.')->grou
     });
     Route::get('/encomendas', [AccountOrderController::class, 'index'])->name('orders.index');
     Route::get('/encomendas/{order}', [AccountOrderController::class, 'show'])->name('orders.show');
+    Route::get('/encomendas/{order}/comprovativo', OrderReceiptController::class)->middleware('customer')->name('orders.receipt');
+    Route::post('/encomendas/{order}/anular', [AccountOrderController::class, 'cancel'])->middleware('customer')->name('orders.cancel');
     Route::resource('moradas', AddressController::class)
         ->except('show')
         ->parameters(['moradas' => 'address'])
